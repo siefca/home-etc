@@ -1,0 +1,30 @@
+
+
+Using home_etc in applications being modified.
+
+A few steps which should be done:
+
+    * backup original sources directory under other name,
+      e.g: sources-1.0.4.orig, keeping sources-1.0.4 for
+      modifications
+
+    * recognize files which requires modification
+      (grep she sources against configuration filenames..)
+
+    * add #include <home_etc.h>
+      in each file, which will need the library functions
+      
+    * substitute variables
+    
+	[home_dir]	--> _HEdir
+	[config_file]	--> _HE(config_file)
+
+    * change the compile options by adding: -lhome_etc
+    
+    * make a: diff -Nur sources-1.0.4.orig sources-1.0.4 > sources-home_etc.patch
+
+    * test if it's working (if not -> back to point 2)
+    
+
+Doing it in a proper way.
+

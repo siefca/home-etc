@@ -1,4 +1,4 @@
-# $Revision: 1.13 $, $Date: 2003/12/08 12:37:16 $
+# $Revision: 1.14 $, $Date: 2003/12/08 13:11:37 $
 Summary:	HOME-ETC support for PLD Linux
 Summary(pl):	Wsparcie mechanizmu HOME-ETC dla PLD Linux
 Name:		home-etc
@@ -113,6 +113,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
+%doc DEVEL-NOTES
 %{_includedir}/*.h
 
 %files static
@@ -129,6 +130,9 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: home-etc.spec,v $
+Revision 1.14  2003/12/08 13:11:37  siefca
+- added DEVEL-NOTES
+
 Revision 1.13  2003/12/08 12:37:16  siefca
 - autogeneration for CONTRIBUTORS
 - autoupdate target for SPEC module
