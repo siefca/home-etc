@@ -26,8 +26,10 @@ rpm:
 	rpmbuild -ta --clean $(NAME)-$(VERSION).tar.gz
 
 install:
-	cd src && make install
-	cd sh && make install
+	for i in $(DIRS); do \
+	cd $$i && make install; \
+	cd -; \
+	done;
 
 clean:
 	cd src && make clean
