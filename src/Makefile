@@ -1,11 +1,11 @@
-# $Id: Makefile,v 1.6 2003/11/28 11:13:17 siefca Exp $
+# $Id: Makefile,v 1.7 2003/11/28 12:51:13 siefca Exp $
 
 CC=gcc
 CFLAGS=-fPIC -O2 -Wall -Werror -pedantic
 CPPFLAGS=-I.
 LDFLAGS=-x --shared
 OUT=libhome_etc.so
-OBJECTS=core.o wrap_fopen.o
+OBJECTS=core.o
 
 all:	$(OBJECTS) $(OUT)
 

@@ -13,7 +13,6 @@
 #include <errno.h>
 
 #include "core.h"
-#include "wrap_fopen.h"
 
 /* HOME_ETC location fetcher */
 
@@ -27,12 +26,5 @@ const char *get_home_etc(char use_home_env)
 const char *home_etc_path(const char *pathname)
 {
     return home_etc_path_core(pathname);
-}
-
-/* fopen() wrapper */
-
-FILE *home_etc_fopen(const char *path, const char *mode)
-{
-    return home_etc_fopen_core(path, mode);
 }
 

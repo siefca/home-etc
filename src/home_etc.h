@@ -21,7 +21,3 @@ const char *get_home_etc(char use_home_env);
 
 const char *home_etc_path(const char *pathname);
 
-/* fopen() wrapper */
-
-FILE *home_etc_fopen(const char *path, const char *mode);
-
