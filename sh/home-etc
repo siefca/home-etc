@@ -160,17 +160,15 @@ rm -f $TMPFILE $TMPFILED
 echo "$SHORTNAME: moving files.."
 cat $TMPFILES  | while read l
 do
-    if [ -f "$HOME/$l" -a -r "$HOME/$l" ]; then
-	mv -f "$HOME/$l" "$HOME_ETC"
-	echo "$SHORTNAME: $HOME/$l\t\t-> $HOME_ETC"
-    elif [ -d "$HOME/$l" -a -r "$HOME/$l" ]; then
-	mv -fr "$HOME/$l" "$HOME_ETC"
-	echo "$SHORTNAME: $HOME/$l\t\t-> $HOME_ETC (dir)"
+    if [ x"$l" = x"" ]; then
+	continue
     fi
+    mv -f $HOME/$l $HOME_ETC 2>/dev/null
+    echo " $HOME/$l\t\t-> $HOME_ETC"
 done
 
 rm -f $TMPFILES
-echo "done!"
+echo "$SHORTNAME: done!"
 
 exit 0
 
@@ -178,6 +176,8 @@ exit 0
 # package	filename
 #
 # -home-etc-mark-
+mutt				.mutt*
+mutt				.Mutt*
 aumix				.aumixrc
 wmmp3				.uzupelnij
 wmtictactoe				.uzupelnij
