@@ -1,53 +1,61 @@
-# $Id: zrobione,v 1.2 2003/12/07 18:20:05 siefca Exp $
-# tu dopisujemy spaczowane/przerobione ze wsparciem dla ~/etc/ pakiety
+# $Id: zrobione,v 1.3 2003/12/08 12:07:08 siefca Exp $
+# This file contains status information for packages
+# patched to be HOME-ETC compliant.
+#
 # format:
+#
 # [login]
-# pakiet1 [tab] stan [tab] pliki [tab] uwagi
-# pakiet2 [tab] stan [tab] pliki [tab] uwagi
+# package [tab] status [tab] files [tab] remarks
 # ...
-# login - nazwa u¿ytkownika, wziêta z xxxxx@pld-linux.org
-# pakiet1, pakiet2 - nazwy pakietów (bez wersji)
-# [tab] - znak tabulacji
-# stan: S - sprawdzony ? - do sprawdzenia X - do poprawki R - w trakcie robienia
-# pliki: oddzielone dwukropkami nazwy plikow konfiguracyjnych i katalogow
-#        ktorych w HOME oczekuje normalnie aplikacja
-#	 (wlaczajac podkakalogi, wlaczajac globy)
+#
+# login  - CVS username
+# pakage - package name (without version number)
+# [tab]  - tab(s)
+# status:
+#         S - ready to sent to builders
+#         ? - unverified
+#         X - unclean (corrections needed)
+#         R - reserved (unfinished)
+#
+# files  - colons delimited filenames and/or directories,
+#          which application wants to use as configuration files
+#          placed normaly in user's HOME (may contain globs)
 #
 
 [siefca]
-qmail		X	.qmail*			stara wersja, sztywne ~/etc
-mutt		S	.mutt*:.Mutt*
+qmail		X	.qmail*			old way, hard ~/etc
+mutt		S	.mutt*:.Mutt*		uses libhome_etc
 pine		R	.pinerc
 
 [yossa]
-xawtv		?	.uzupelnij		dorobic obsluge w radio
+xawtv		?	.fixme		no support in radio
 
 [zagrodzki]
-icewm		R	.uzupelnij
+icewm		R	.fixme
 aumix		S	.aumixrc
-gcombust	?	.uzupelnij
-micq		?	.uzupelnij
+gcombust	?	.fixme
+micq		?	.fixme
 links		?	.links
 
 [pius]
-wmmp3		S	.uzupelnij
-wmtictactoe	S	.uzupelnij
-wminet		S	.uzupelnij
-signify		?	.uzupelnij
+wmmp3		S	.fixme
+wmtictactoe	S	.fixme
+wminet		S	.fixme
+signify		?	.fixme
 
 [waszi]
-slrn		?	.slrnrc			dodany patch bez zmian w dokumentacji
+slrn		?	.slrnrc			documentation omited
 
 [orzech]
 cvs		S	.cvs*
-ekg		S	.ekg:.gg		w³±czone do programu
-lftp		S	.uzupelnij
+ekg		S	.ekg:.gg		incorporated into original sources
+lftp		S	.fixme
 screen		S	.screenrc
-sms		S	.uzupelnij
+sms		S	.fixme
 
 [adgor]
-pld-up		S	.uzupelnij
-xsettools	S	.uzupelnij
+pld-up		S	.fixme
+xsettools	S	.fixme
 
 [dobrek]
 mc		R	.mc:.cedit
@@ -56,4 +64,4 @@ mc		R	.mc:.cedit
 mozilla		R	.mozilla
 
 [roman]
-lynx		R	.uzupelnij
+lynx		R	.fixme
