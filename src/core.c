@@ -16,6 +16,49 @@
 
 #include "core.h"
 
+inline void zero_last_path_element(char *path)
+{
+    
+}
+
+const char *absolutize_path(const char *path, char *ptr)
+{
+    char *p, *q;
+    static char *pathbuf[MAXPATHLEN];
+    char *dirbuf[MAXPATHLEN];
+    
+    if (ptr == NULL)
+	bzero(pathbuf, sizeof(pathbuf));
+
+    p = ptr;			/* token begin */
+    q = strchr(ptr, (int)'/');	/* token end */
+    
+    if (q == NULL)
+	q = p + strlen(p);
+    
+    strncpy(dirbuf, p, p-q);
+    if (p == q)
+	*dirbuf == '\0';
+    else
+    {
+	if (*dirbuf == '.')
+	{
+	    if (*(dirbuf+1) == '/')
+		*dirbuf = '\0';
+	    else
+	    {
+		if (*(dirbuf+1) == '.')
+		{
+		    *dirbuf = '\0';
+		    zero_last_path_element(pathbuf);
+		}
+	    }
+	}
+    }
+    
+    chdir(
+}
+
 const char *obtain_home_dir(char use_home_env)
 {
     struct passwd *pw;
@@ -158,139 +201,9 @@ const char *home_etc_path_core(const char *path)
     bzero(pathbuf, sizeof(pathbuf));
     strncpy(pathbuf, path, sizeof(pathbuf));
 
-    /* is it a directory at the end?	*/
-    /* if yes, mark it and remember	*/
-    s--;
-    if (!s) return NULL;
-    if (s > 0 && *(pathbuf+s) == '/') /* was >= */
-    {
-	wasdir = 1;
-	*(pathbuf+s) = '\0';
-	s--;
-	if (*(pathbuf+s) == '/')
-	    return NULL;
-    }
+    /* step 1 - check whether the path is relative */
+    if (*pathbuf != '/' &&
+       !(*pathbuf == '.' && (*(pathbuf+1) == '/' || *(pathbuf+1) == '.'))
+        *(pathbuf+1) == './'
 
-    /* fetch the home directory name */
-    home_dir = obtain_home_dir(1);
-    if (home_dir == NULL || *home_dir == '\0')
-	return NULL;
-
-    /* now, get the absolute path of the given directory */
-    d = strdup(dirname(pathbuf));
-    bzero(pathbuf, sizeof(pathbuf));
-    strncpy(pathbuf, path, sizeof(pathbuf));
-    f = strdup(basename(pathbuf));
-
-    if (d == NULL && f == NULL)
-        return NULL;
-
-    /* remember current dir */
-    bzero(dirbuf, sizeof(dirbuf));
-    if ((getcwd(dirbuf, sizeof(dirbuf)-1)) == NULL)
-    {
-	free(f); free(d);
-	return NULL;
-    }
-
-    /* ding dong! exception */
-    /* if we are in home then we can allow empty dirpart of a path */
-    /* we are also constructing everything here if te path was not absolute */
-    if ((d != NULL && *d != '/') || d == NULL)
-    {
-	if (!strcmp(dirbuf, home_dir))
-	{
-	    if (  (strlen(home_etc_dir))
-	        + (strlen(f))
-		+ (d ? strlen(d) : 0)
-		+ 4 > sizeof(dirbuf)
-	       )
-		{
-		    free(d); free(f);
-    		    return NULL; /* pathname too long */
-		}
-		bzero(dirbuf, sizeof(dirbuf));
-		strcpy(dirbuf, home_etc_dir);	/* HOME_ETC		*/
-		strcat(dirbuf, "/");		/* slash 		*/
-		if (d != NULL && *d != '\0' && !(*d == '.' && *(d+1) == '\0'))
-		{
-			strcat(dirbuf, d);	/* dirname		*/
-			strcat(dirbuf, "/");	/* slash 		*/
-		}
-		strcat(dirbuf, f);		/* filename		*/
-		if (wasdir) strcat(dirbuf, "/");
-	    free(d); free(f);
-	    return dirbuf;
-	}
-	else
-	{
-	    free(d); free(f);
-	    return NULL;
-	}
-    }
-
-    /* try to enter the obtained dir */
-    bzero(buf, sizeof(buf));
-    if ((chdir(d)) == -1)
-    {
-	/* if we cannot enter it means the directory	*/
-	/* may not exist yet - it's not an error	*/
-	/* it may be a directory name part, appended	*/
-	/* to home, e.g.: /home/users/siefca/xxx	*/
-	/* in this case we can simply pass the given 	*/
-	/* path in hope it will be useful, whithout  	*/
-	/* resolving it using system calls..	 	*/
-	strncpy(buf, d, sizeof(buf));
-	/* todo: recursive from-front resolving in this case 	*/
-	/*	 probably slow, but gives us a total effect	*/
-    }
-    else
-    {
-	/* fetch the absolute pathname and put it into the buf */
-	if ((getcwd(buf, sizeof(buf)-1)) == NULL)
-	{
-	    free(f); free(d);
-	    chdir(dirbuf); /* back */
-		return NULL;
-	}
-	/* back to old dir */
-	chdir(dirbuf);
-    }
-
-    /* check whether the path is a home directory path	*/
-    /* or whether the path contains it			*/
-
-    /* difference test */
-    p = compare_paths(home_dir, buf);
-    if (p == NULL)	/* buf does not contain home location */
-    {
-    	free(f); free(d);
-	return NULL;
-    }
-    
-    /* now the d variable contains		*/
-    /* the rest of the path, after homedir path	*/
-    
-    if (   (strlen(home_etc_dir))
-         + (strlen(p)) 
-	 + (strlen(f))
-	 + 4 > sizeof(dirbuf)    )
-    {
-    	free(f); free(d);
-    	return NULL; /* pathname too long */
-    }
-    
-    bzero(dirbuf, sizeof(dirbuf));
-    strcpy(dirbuf, home_etc_dir);	/* HOME_ETC		*/
-    strcat(dirbuf, "/");		/* slash 		*/
-    if (p != NULL && *p != '\0')
-    {
-	strcat(dirbuf, p);		/* rest of the dir	*/
-	strcat(dirbuf, "/");		/* slash 		*/
-    }
-    strcat(dirbuf, f);			/* the filename		*/
-    if (wasdir) strcat(dirbuf, "/");
-
-    free(f); free(d);
-    return dirbuf;
 }
