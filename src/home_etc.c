@@ -28,3 +28,18 @@ const char *home_etc_path(const char *pathname)
     return home_etc_path_core(pathname);
 }
 
+/* HOME_ETC location fetcher -- static buf */
+
+const char *get_home_etc_static()
+{
+    static const char *was = NULL;
+
+    if (!was)
+    {
+	was = get_home_etc_core(1);
+	if (!was)
+	    was = obtain_home_dir(1);
+    }
+
+    return was;
+}

@@ -1,1 +1,8 @@
 - automake/libtoolize :>
+- locale support in migration script
+
+- developer notes:
+
+    - patching existing applications
+    - developing new applications
+    - example configure.in for tests

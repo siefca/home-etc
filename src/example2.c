@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     setenv("HOME", "/root", 1);
     setenv("HOME_ETC", "/root/myconfigs", 1);
     
-    p = H_E("/root/.myrc");
+    p = _HE("/root/.myrc");
     printf("path: %s\n", p);
 
     exit(0);

@@ -1,0 +1,59 @@
+# $Id: zrobione,v 1.1 2003/12/07 17:06:12 siefca Exp $
+# tu dopisujemy spaczowane/przerobione ze wsparciem dla ~/etc/ pakiety
+# format:
+# [login]
+# pakiet1 [tab] stan [tab] pliki [tab] uwagi
+# pakiet2 [tab] stan [tab] pliki [tab] uwagi
+# ...
+# login - nazwa u¿ytkownika, wziêta z xxxxx@pld-linux.org
+# pakiet1, pakiet2 - nazwy pakietów (bez wersji)
+# [tab] - znak tabulacji
+# stan: S - sprawdzony ? - do sprawdzenia X - do poprawki R - w trakcie robienia
+# pliki: oddzielone dwukropkami nazwy plikow konfiguracyjnych i katalogow
+#        ktorych w HOME oczekuje normalnie aplikacja
+#	 (wlaczajac podkakalogi, wlaczajac globy)
+#
+
+[siefca]
+qmail		X	.qmail*			stara wersja, sztywne ~/etc
+mutt		?	.mutt*
+pine		R	.pinerc
+
+[yossa]
+xawtv		?	.uzupelnij		dorobic obsluge w radio
+
+[zagrodzki]
+icewm		R	.uzupelnij
+aumix		S	.aumixrc
+gcombust	?	.uzupelnij
+micq		?	.uzupelnij
+links		?	.links
+
+[pius]
+wmmp3		S	.uzupelnij
+wmtictactoe	S	.uzupelnij
+wminet		S	.uzupelnij
+signify		?	.uzupelnij
+
+[waszi]
+slrn		?	.slrnrc			dodany patch bez zmian w dokumentacji
+
+[orzech]
+cvs		S	.cvs*
+ekg		S	.ekg:.gg		w³±czone do programu
+lftp		S	.uzupelnij
+screen		S	.screenrc
+sms		S	.uzupelnij
+
+[adgor]
+pld-up		S	.uzupelnij
+xsettools	S	.uzupelnij
+
+[dobrek]
+mc		R	.mc:.cedit
+
+[michuz]
+mozilla		R	.mozilla
+
+[roman]
+lynx		R	.uzupelnij

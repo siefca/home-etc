@@ -1,5 +1,6 @@
 filename		location
 
+home-etc		/usr/bin
 home-etc.sh		/etc/profile.d
 home-etc.csh		/etc/profile.d
 .home_etc		/etc/skel

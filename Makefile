@@ -2,7 +2,7 @@ NAME=home-etc
 VERSION=1.0.1
 LIBNAME=libhome_etc.so
 
-DIRS=sh src skel
+DIRS=sh src skel patchwork
 FILES=FILES TODO COPYING AUTHORS CONTRIBUTORS HOME-ETC.txt README home-etc.spec
 
 all: lib

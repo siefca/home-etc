@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
     strcat(path, "/.myrcfile");
     
     /* was: f = fopen(path, "r"); */
-    f = fopen(H_E(path), "r");	/***/
+    f = fopen(_HE(path), "r");	/***/
     
     if (f) fclose(f);
     exit(0);

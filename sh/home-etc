@@ -11,17 +11,88 @@
 REQ_PACKAGE="home-etc"
 
 echo "home-etc - migrate your dotfiles! v1.0.1 (LGPL)"
-echo
-echo "This script will migrate known configuration files and directories"
-echo "which supports HOME-ETC from the given directory to the directory"
-echo "pointed out by the HOME_ETC variable."
-echo
 
 MYNAME="$0"
 if [ `echo "$MYNAME" | cut -b1,2 ` = "./" ]; then
     MYNAME="`pwd`/`basename $MYNAME`"
 fi
 SHORTNAME=`basename $MYNAME`
+
+body=`grep -n -e '-home-etc-mark-' $MYNAME | grep -v grep | cut -d':' -f1` 
+if [ x"$body" = x ]; then
+    echo "$SHORTNAME: mark-line not found, aboting!"
+    exit 1
+fi
+
+total=`cat $MYNAME | wc -l`
+line=$((total-body))
+
+if [ x"$1" = x"--update" ]; then
+    MYFILE="$MYNAME.new"
+    if [ ! -r ../patchwork/zrobione ]; then
+	echo "$SHORTNAME: it seems you are not invoking me from the CVS tree!"
+	echo "$SHORTNAME: cannot open "`pwd`"/patchwork/zrobione"
+	exit 1
+    fi
+    echo -n >$MYFILE
+    echo "$SHORTNAME: updating internal index.."
+    echo "$SHORTNAME: excluded packages bellow (if any):"
+    head -n $body $MYNAME > $MYFILE
+    cat ../patchwork/zrobione | tr -s '\t' ' ' | while read l
+    do
+	f=`echo "$l" | cut -b1`
+	if [ x"$f" = x"#" -o x"$f" = x"" ]; then
+	    continue
+	fi
+	if [ x"$f" = x'[' ]; then
+	    author=`echo "$l" | tr -d '[]'`
+	    continue
+	fi
+	package=`echo "$l" | cut -d' ' -f1`
+	status=`echo "$l" | cut -d' ' -f2 | cut -b1`
+	files=`echo "$l" | cut -d' ' -f3`
+	warns=`echo "$l" | cut -d' ' -f4-`
+	if [ x"$package" = x"" -o x"$status" = x"" -o x"$files" = x"" ]; then
+	    continue
+	fi
+	if [ x"$status" != x"S" ]; then
+	    taby=${#package}
+	    taby=$((taby/7))
+	    if [ $taby -le 0 ]; then
+		taby=0
+	    fi
+	    taby=$((3-taby))
+	    if [ $taby -le 0 ]; then
+		taby=1
+	    fi
+	    taby=`echo -e '\t\t\t\t\t\t' | cut -b1-$taby`
+	    if [ x"$status" = x"?" ]; then
+		echo -e " $package:${taby}untested (by $author)"
+	    elif [ x"$status" = x"X" ]; then
+		echo " $package:${taby}$warns (by $author)"
+	    elif [ x"$status" = x"R" ]; then
+		echo " $package:${taby}unfinished (by $author)"
+	    fi
+	    continue
+	else
+	    echo "$files" | tr ':' '\n' | while read n
+	    do
+		echo -e "${package}\t${taby}${n}" >>$MYFILE
+	    done
+	fi
+    done
+
+    echo >>$MYFILE
+    echo "$SHORTNAME: my new version has been generated under: $MYFILE"
+    chmod a+rx $MYFILE
+    exit 0
+fi
+
+echo
+echo "This script will migrate known configuration files and directories"
+echo "which supports HOME-ETC from the given directory to the directory"
+echo "pointed out by the HOME_ETC variable."
+echo
 
 if [ x"$HOME_ETC" = x"" ]; then
     echo "$SHORTNAME: cannot obtain HOME_ETC variable - set it up first!"
@@ -32,15 +103,6 @@ if [ ! -d "$HOME_ETC" ]; then
     echo "$SHORTNAME: directory $HOME_ETC not found - creating one.."
     mkdir -p "$HOME_ETC" || exit 1
 fi
-
-line=`grep -n -e '-home-etc-mark-' $MYNAME | grep -v grep | cut -d':' -f1` 
-if [ x"$line" = x ]; then
-    echo "$SHORTNAME: mark-line not found, aboting!"
-    exit 1
-fi
-
-total=`cat $MYNAME | wc -l`
-line=$((total-line))
 
 echo
 echo -n "Enter the source directory or press ENTER [$HOME]: "
@@ -59,6 +121,7 @@ if [ $? -ne 0 ]; then
     echo "$SHORTNAME: Cannot create temp file, exiting.."
     exit 1
 fi
+
 TMPFILES=`mktemp -q $TMP/$SHORTNAME.XXXXXX`
 if [ $? -ne 0 ]; then
     echo "$SHORTNAME: Cannot create temp file, exiting.."
@@ -98,11 +161,11 @@ echo "$SHORTNAME: moving files.."
 cat $TMPFILES  | while read l
 do
     if [ -f "$HOME/$l" -a -r "$HOME/$l" ]; then
-	mv -f "$HOME/$l" "$HOME_ETC/$l"
-	echo "$SHORTNAME: $HOME/$l\t\t-> $HOME_ETC/$l"
+	mv -f "$HOME/$l" "$HOME_ETC"
+	echo "$SHORTNAME: $HOME/$l\t\t-> $HOME_ETC"
     elif [ -d "$HOME/$l" -a -r "$HOME/$l" ]; then
-	mv -fr "$HOME/$l" "$HOME_ETC/$l"
-	echo "$SHORTNAME: $HOME/$l\t\t-> $HOME_ETC/$l (dir)"
+	mv -fr "$HOME/$l" "$HOME_ETC"
+	echo "$SHORTNAME: $HOME/$l\t\t-> $HOME_ETC (dir)"
     fi
 done
 
@@ -115,6 +178,16 @@ exit 0
 # package	filename
 #
 # -home-etc-mark-
-mutt		.mutt
-mutt		.muttrc
-pine		.pine
+aumix				.aumixrc
+wmmp3				.uzupelnij
+wmtictactoe				.uzupelnij
+wminet				.uzupelnij
+cvs				.cvs*
+ekg				.ekg
+ekg				.gg
+lftp				.uzupelnij
+screen				.screenrc
+sms				.uzupelnij
+pld-up				.uzupelnij
+xsettools				.uzupelnij
+

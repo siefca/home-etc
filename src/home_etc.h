@@ -11,10 +11,10 @@
  * interface
  */
 
-/* HOME_ETC location fetcher */
-
 #ifndef	__HOME_ETC_H
 #define	__HOME_ETC_H
+
+/* HOME_ETC location fetcher */
 
 const char *get_home_etc(char use_home_env);
 
@@ -24,7 +24,7 @@ const char *home_etc_path(const char *pathname);
 
 /* a sweet wrapper */
 
-inline const char *H_E(const char *pathname)
+inline const char *_HE(const char *pathname)
 {
     const char *p = home_etc_path(pathname);
     
@@ -33,6 +33,12 @@ inline const char *H_E(const char *pathname)
 	
     return p;
 }
+
+/* a sweetest wrapper */
+
+const char *get_home_etc_static();
+
+#define	_HEdir get_home_etc_static()
 
 #endif
 
