@@ -65,8 +65,6 @@ const char *compare_paths(const char *a, const char *b)
 	return NULL; /* strange, e.g.: /home/users/johnsomercfile */
     p++;
 
-    printf("wydam: %s\n", p);
-
     return p;
 }
 
@@ -194,24 +192,32 @@ const char *home_etc_path_core(const char *path)
 	return NULL;
     }
 
-	/* ding dogn! exception */
-        /* if we are in home then we allow empty dirpart of a path */
-	if (d == NULL && !strcmp(dirbuf, home_dir))
+    /* ding dogn! exception */
+    /* if we are in home then we allow empty dirpart of a path */
+    /* we are also constructing everything here if te path was not absolute */
+    if (d == NULL || *d == '\0' || *d != '/')
+    /**d == '.' && *(d+1) == '\0'))*/
+    {
+	if (!strcmp(dirbuf, home_dir))
 	{
 	    if ((strlen(home_etc_dir)) + (strlen(f)) + 2 > sizeof(dirbuf))
 		{
-		    free(f);
+		    free(d); free(f);
     		    return NULL; /* pathname too long */
 		}
 		bzero(dirbuf, sizeof(dirbuf));
 		strcpy(dirbuf, home_etc_dir);	/* HOME_ETC		*/
 		strcat(dirbuf, "/");		/* slash 		*/
-		strcpy(dirbuf, f);		/* filename		*/
-		free(f);
+		strcat(dirbuf, f);		/* filename		*/
 	    return dirbuf;
 	}
+	else
+	{
+	    return NULL;
+	}
+    }
 
-    /* try enter the obtained dir */
+    /* try to enter the obtained dir */
     bzero(buf, sizeof(buf));
     if ((chdir(d)) == -1)
     {
@@ -257,9 +263,6 @@ const char *home_etc_path_core(const char *path)
 	 + (strlen(f))
 	 + 4 > sizeof(dirbuf)    )
     {
-	printf("pathname len: %ud\n", (unsigned int)   (strlen(home_etc_dir))
-         + (strlen(p)) 
-	 + (strlen(f)));
     	free(f); free(d);
     	return NULL; /* pathname too long */
     }
