@@ -31,16 +31,19 @@ DESCRIPTION
       and if it is it trustes it
       
     * if the HOME_ETC is not set, it tries to obtain user's
-      home directory in two ways: HOME anvironment variable
+      home directory in two ways: via HOME anvironment variable
       (if the use_home_env was non-zero) and in case of failure
-      getpwuid()
+      via getpwuid()
       
     * having a home directory it tries to read the file called
       ~/.home-etc
-      
+
     * if the file is opened it tries to read the first line
     
     * if the first line is found and it is a path it trustes it
+    
+    * if the path is not absolute it is absolutized using obtained
+      home directory pathname
 
 RETURN VALUE
 
