@@ -1,4 +1,4 @@
-# $Id: zrobione,v 1.7 2003/12/16 11:38:53 siefca Exp $
+# $Id: zrobione,v 1.8 2003/12/17 14:49:22 siefca Exp $
 # This file contains status information for packages
 # patched to be HOME-ETC compliant.
 #
@@ -23,10 +23,10 @@
 #
 
 [siefca]
-qmail		X	.qmail*		uses libhome_etc
+qmail		?	.qmail*		uses libhome_etc
 mutt		S	.mutt*:.Mutt*	uses libhome_etc
 pine		S	.pinerc		uses libhome_etc, documentation not modified
-poldek		?	.poldek*	users libhome_etc, documentation not modified
+poldek		?	.poldek*	uses libhome_etc, documentation not modified
 
 [yossa]
 xawtv		?	.fixme		no support in radio
