@@ -1,0 +1,36 @@
+#!/bin/sh
+
+# update CONTRIBUTORS file
+
+cat >CONTRIBUTORS <<EOF
+
+People who helped me to work on the idea:
+
+ Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
+ Adam Ryba <pooh@gate.pl>
+ Tomasz Orzechowski <orzech@pld-linux.org>
+
+People who have been working on patches:
+
+EOF
+
+cat ./patchwork/zrobione | tr -s '\t' ' ' | while read l
+do
+    f=`echo "$l" | cut -b1`
+    if [ x"$f" = x"#" -o x"$f" = x"" ]; then
+        continue
+    fi
+    if [ x"$f" = x'[' ]; then
+        author=`echo "$l" | tr -d '[]'`
+	line=`grep "^$author:" ../CVSROOT/users`
+	if [ x"$line" = x"" ]; then
+	    continue
+	fi
+	email=`echo $line | cut -d':' -f2`
+	name=`echo $line | cut -d':' -f3`
+	echo " $name <$email>"
+        continue
+    fi
+done | sort | uniq >>CONTRIBUTORS
+
+exit 0

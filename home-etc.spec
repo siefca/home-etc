@@ -1,4 +1,4 @@
-# $Revision: 1.12 $, $Date: 2003/12/08 12:11:06 $
+# $Revision: 1.13 $, $Date: 2003/12/08 12:37:16 $
 Summary:	HOME-ETC support for PLD Linux
 Summary(pl):	Wsparcie mechanizmu HOME-ETC dla PLD Linux
 Name:		home-etc
@@ -10,7 +10,7 @@ Group:		Base
 Requires:	coreutils
 Requires:	shadow
 Source0:	ftp://ftp.pld-linux.org/people/siefca/distfiles/%{name}-%{version}.tar.gz
-# Source0-md5:	a8fb13ce505ac0a56c02ba34d44b3ea6
+# Source0-md5:	0afb4f7ae132c83cea89bb1a6646f8ff
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -129,8 +129,21 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: home-etc.spec,v $
-Revision 1.12  2003/12/08 12:11:06  siefca
-- documentation name change
+Revision 1.13  2003/12/08 12:37:16  siefca
+- autogeneration for CONTRIBUTORS
+- autoupdate target for SPEC module
+
+Revision 1.8  2003/12/08 12:17:18  siefca
+- release 3
+
+Revision 1.7  2003/12/07 20:20:28  eothane
+- correct Source0-md5:
+
+Revision 1.6  2003/12/07 18:23:03  siefca
+- md5 updated
+
+Revision 1.5  2003/12/07 18:22:31  siefca
+- release 2
 
 Revision 1.11  2003/12/07 18:18:18  siefca
 - bug fixed in migration script
