@@ -41,17 +41,17 @@ of pathnames.
     
 \fB_HE\fP is a wrapper for this function, which never returns NULL, since NULL
 wasn't given as an argument. It calls \fBhome_etc_path(3)\fP and in case
-of failure it simply returns the given pathname. It always sets \fIuse_env\fP
+of failure it simply returns the given \fIpathname\fP. It always sets \fIuse_env\fP
 to a non-zero.
 
 \fB_HEn\fP is a wrapper for this function, which never returns NULL, since NULL
 wasn't given as an argument. It calls \fBhome_etc_path(3)\fP and in case
-of failure it simply returns the given pathname. It always sets \fIuse_env\fP
+of failure it simply returns the given \fIpathname\fP. It always sets \fIuse_env\fP
 to zero.
 
 \fB___HE\fP is a wrapper for this function, which never returns NULL, since NULL
 wasn't given as an argument. It calls \fBhome_etc_path(3)\fP and in case
-of failure it simply returns the given pathname. It doesn't trusts the environment
+of failure it simply returns the given \fIpathname\fP. It doesn't trusts the environment
 variables if \fB_HE_DAEMON\fP was defined before including the header file. It trusts
 and uses the environment (\fBHOME_ETC\fP and \fBHOME\fP) if the \fB_HE_DAEMON\fP wasn't
 defined.

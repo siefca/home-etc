@@ -146,7 +146,7 @@ const char *home_etc_path(const char *path, char use_env)
 }
 
 /****************************************************************/
-/* HOME_ETC location fetcher -- static buf */
+/* HOME_ETC location fetchers -- static buf */
 
 const char *get_home_etc_static(char use_env)
 {
@@ -154,6 +154,28 @@ const char *get_home_etc_static(char use_env)
 
     if (was == NULL || *was == '\0')
 	was = get_home_etc(use_env);
+
+    return was;
+}
+
+const char *get_home_etc_static_n(char use_env)
+{
+    static const char *was = NULL;
+
+    if (was == NULL || *was == '\0')
+	was = get_home_etc(use_env);
+
+    if (was == NULL || *was == '\0')
+    {
+	was = obtain_home_dir(use_env);
+	if ((strlen(was)) >= sizeof(h_etc_path))
+	    was = NULL;
+	else
+	{
+	    strcpy(h_etc_path, was);
+	    was = h_etc_path;
+	}
+    }
 
     return was;
 }

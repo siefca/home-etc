@@ -54,21 +54,21 @@ but it will remember the internal pointer, and executed once it won't call the
 \fBget_home_etc(3)\fP again if the buffer is not NULL or is not an empty string.
 This function caches obtained data.
 
-\fB_HEdir\fP is a macro for this function, which never returns NULL, since NULL
-wasn't given as an argument. It calls \fBhome_etc_path_static(3)\fP and in case
-of failure it simply returns the given pathname. It always sets \fIuse_env\fP
-to a non-zero.
+\fB_HEdir\fP is a macro for this function, that should never returns NULL, since NULL
+wasn't given as an argument and since home directory of the current user can be obtained.
+It calls \fBget_home_etc_static(3)\fP and in case of failure it simply returns the
+home directory path. It always sets \fIuse_env\fP to a non-zero.
 
 \fB_HEndir\fP is a macro for this function, which never returns NULL, since NULL
-wasn't given as an argument. It calls \fBhome_etc_path(3)\fP and in case
-of failure it simply returns the given pathname. It always sets \fIuse_env\fP
-to zero.
+wasn't given as an argument and since home directory of the current user can be obtained.
+It calls \fBget_home_etc_static(3)\fP and in case of failure it simply returns
+the home directory path. It always sets \fIuse_env\fP to zero.
 
 \fB___HEdir\fP is a macro for this function, which never returns NULL, since NULL
-wasn't given as an argument. It calls \fBhome_etc_path(3)\fP and in case
-of failure it simply returns the given pathname. It doesn't uses the environment
-variables (\fBHOME\fP and \fBHOME_ETC\fP) if the \fB_HE_DAEMON\fP was defined
-before including the header file.
+wasn't given as an argument and since home directory of the current user can be obtained.
+It calls \fBget_home_etc_static(3)\fP and in case of failure it simply returns the
+home directory path. It doesn't uses the environment variables (\fBHOME\fP and \fBHOME_ETC\fP)
+if the \fB_HE_DAEMON\fP was defined before including the header file.
 
 .SH "RETURN VALUE"
 This function returns the pointer to a static buffer containing

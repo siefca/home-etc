@@ -1,9 +1,9 @@
-# $Revision: 1.19 $, $Date: 2003/12/10 16:57:23 $
+# $Revision: 1.20 $, $Date: 2003/12/11 16:06:30 $
 Summary:	HOME-ETC support for PLD Linux
 Summary(pl):	Wsparcie mechanizmu HOME-ETC dla PLD Linux
 Name:		home-etc
-Version:	1.0.6
-Release:	8
+Version:	1.0.7
+Release:	1
 Epoch:		1
 License:	LGPL
 Group:		Base
@@ -132,6 +132,12 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: home-etc.spec,v $
+Revision 1.20  2003/12/11 16:06:30  siefca
+- code reorganization at wrappers section
+- directory wrappers are now returning HOME instead of NULL pointer
+- tests expanded
+- documentation fixed and updated
+
 Revision 1.19  2003/12/10 16:57:23  siefca
 -documentation fixed and updated
 

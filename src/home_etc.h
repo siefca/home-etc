@@ -18,6 +18,7 @@
 
 const char *get_home_etc(char use_env);
 const char *get_home_etc_static(char use_env);
+const char *get_home_etc_static_n(char use_env);
 
 /* pathname reconstructor */
 
@@ -30,8 +31,8 @@ const char *_HEn(const char *pathname);
 
 /* a sweetest wrappers */
 
-#define	_HEdir get_home_etc_static(1)
-#define	_HEndir get_home_etc_static(0)
+#define	_HEdir get_home_etc_static_n(1)
+#define	_HEndir get_home_etc_static_n(0)
 
 /* reset cache */
 void home_etc_reset();

@@ -63,5 +63,30 @@ int main (int argc, char *argv[])
 	        b,
 		home_etc_path(b,1));
 
+    /* wrapper tests */
+
+    printf("\n----------------------------\n"
+	   "wrapper tests\n"
+	   "----------------------------\n");
+
+    printf("press any key...\n");
+    (void) getc(stdin);
+
+    for (x = 0; x < sizeof(a) / sizeof(char *); x++)
+    {
+	printf(" path:\t\t%s\n result:\t%s\n----------------------------\n",
+	        a[x],
+		_HE(a[x]));
+    }
+
+    printf("press any key...\n");
+    (void) getc(stdin);
+
+    printf("_HEdir: %s\n", _HEdir);
+    printf("_HEndir: %s\n", _HEndir);
+
+    printf("press any key...\n");
+    (void) getc(stdin);
+
     return 0;
 }
