@@ -9,7 +9,6 @@
 
 #include <unistd.h>
 #include <stdio.h>
-#include <libgen.h>
 #include <sys/param.h>
 #include <sys/types.h>
 #include <string.h>

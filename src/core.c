@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <libgen.h>
 #include <string.h>
 #include <pwd.h>
 
@@ -135,10 +136,11 @@ const char *get_home_etc_core(char use_home_env)
 
 const char *home_etc_path_core(const char *path)
 {
-    const char dirbuf[MAXPATHLEN];
+    static char dirbuf[MAXPATHLEN];
     char pathbuf[MAXPATHLEN];
     char buf[MAXPATHLEN];
-    const char *home_etc_dir, *home_dir, *d;
+    const char *home_etc_dir, *home_dir, *p;
+    char *f, *d;
     char wasdir = 0;
     size_t s;
     
@@ -173,23 +175,50 @@ const char *home_etc_path_core(const char *path)
     /* now, get the absolute path of the given directory 	*/
     /* then check whether the path is a home directory path	*/
 
-    d = dirname(pathbuf);
-    if (d == NULL)
+    d = strdup(dirname(pathbuf));
+    bzero(pathbuf, sizeof(pathbuf));
+    strncpy(pathbuf, path, sizeof(pathbuf));
+    f = strdup(basename(pathbuf));
+
+    if (d == NULL && f == NULL)
         return NULL;
 
     /* remember current dir */
     bzero(dirbuf, sizeof(dirbuf));
     if ((getcwd(dirbuf, sizeof(dirbuf)-1)) == NULL)
+    {
+	free(f); free(d);
 	return NULL;
+    }
 
-    /* enter the dir */
+    /* if we are in home then we allow empty dirpart of a path */
+    if (d == NULL && !strcmp(dirbuf, home_dir))
+    {
+	if ((strlen(home_etc_dir)) + (strlen(f)) + 2 > sizeof(dirbuf))
+	    {
+		free(f);
+    		return NULL; /* pathname too long */
+	    }
+	bzero(dirbuf, sizeof(dirbuf));
+	strcpy(dirbuf, home_etc_dir);	/* HOME_ETC		*/
+	strcat(dirbuf, "/");		/* slash 		*/
+	strcpy(dirbuf, f);		/* filename		*/
+	free(f);
+	return dirbuf;
+    }
+
+    /* enter the obtained dir */
     if ((chdir(d)) == -1)
+    {
+    	free(f); free(d);
         return NULL;
+    }
 
     /* fetch the absolute pathname and put it into the buf */
     bzero(buf, sizeof(buf));
     if ((getcwd(buf, sizeof(buf)-1)) == NULL)
     {
+	free(f); free(d);
 	chdir(dirbuf); /* back */
 	return NULL;
     }
@@ -197,22 +226,33 @@ const char *home_etc_path_core(const char *path)
     chdir(dirbuf);
 
     /* difference test */
-    d = compare_paths(home_dir, buf);
-    
-    if (d == NULL)	/* buf does not contain home location */
+    p = compare_paths(home_dir, buf);
+    if (p == NULL)	/* buf does not contain home location */
+    {
+    	free(f); free(d);
 	return NULL;
-	
+    }
+    
     /* now the d variable contains		*/
     /* the rest of the path, after homedir path	*/
     
-    if ((strlen(home_etc_dir)) + (strlen(d)) + 4 > sizeof(dirbuf))
+    if (   (strlen(home_etc_dir))
+         + (strlen(p)) 
+	 + (strlen(f))
+	 + 4 > sizeof(dirbuf)    )
+    {
+    	free(f); free(d);
     	return NULL; /* pathname too long */
+    }
     
     bzero(dirbuf, sizeof(dirbuf));
-    strcpy(dirbuf, home_etc_dir);
-    strcat(dirbuf, "/");
-    strcat(dirbuf, d);
+    strcpy(dirbuf, home_etc_dir);	/* HOME_ETC		*/
+    strcat(dirbuf, "/");		/* slash 		*/
+    strcat(dirbuf, p);			/* rest of the dir	*/
+    strcat(dirbuf, "/");		/* slash 		*/
+    strcat(dirbuf, f);			/* the filename		*/
     if (wasdir) strcat(dirbuf, "/");
 
+    free(f); free(d);
     return dirbuf;
 }
