@@ -1,0 +1,6 @@
+file			location
+
+home-etc.sh		/etc/profile.d
+home-etc.csh		/etc/profile.d
+.home_etc		/etc/skel
+example.c		(after make up.. /usr/lib)

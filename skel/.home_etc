@@ -1,0 +1,24 @@
+#etc
+#
+# This is HOME-ETC helper file for PLD Linux.
+# It allows you to move your configuration files into
+# an alternative directory.
+#
+# See /usr/share/doc/home-etc/README for more info.
+#
+# First readable line of this file should contain the pathname
+# of your personal 'etc' directory. If the given pathname
+# is not absolute, then it will be prefixed by the pathname
+# of the directory where this file resides.
+#
+# Note, that this file will be used only if there is no chance
+# to obtain the directory using environment variable HOME_ETC
+# which should contain the _absolute_ pathname of your directory.
+#
+# The HOME_ETC environment variable is probably automagicaly set
+# for you using this file by profile.d scripts.
+#
+# If you would like to use the feature just place your path
+# in the first line (or uncomment it). Do NOT place any comments
+# on the top line if you are using it.
+###############################################################
