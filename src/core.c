@@ -7,13 +7,7 @@
  *
  */
 
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <libgen.h>
-#include <string.h>
-#include <pwd.h>
-
+#include "includes.h"
 #include "core.h"
 
 /*********************************************************************/

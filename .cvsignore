@@ -3,6 +3,7 @@ home-etc*.tar.gz
 home-etc-0*
 home-etc-1*
 home-etc-2*
+home-etc.spec
 test
 a.out
 *.o
