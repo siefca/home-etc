@@ -214,7 +214,7 @@
 
 11. Autorzy.
 
-Autorem tego dokumentu jest		Pawe³ Wilk <siefca@pld-linux.org>
+Autorem tego dokumentu jest		Pawe³ Wilk <siefca@gnu.org>
 Pomys³ na osobny katalog z danymi:	Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
 Pomys³ na zmienn± ¶rodowiskow±:		Adam Ryba <pooh@gate.pl>
 Poprawki/aktualizacja:			Tomasz Orzechowski <orzech@pld-linux.org>

@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2003 Pawel Wilk <siefca@gnu.org>,
  *
- * This is free software; see the GNU General Public License version 2
+ * This is free software; see the GNU Lesser General Public License version 2
  * or later for copying conditions.  There is NO warranty.
  *
  */

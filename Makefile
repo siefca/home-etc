@@ -1,9 +1,9 @@
-NAME=home_etc
+NAME=home-etc
 VERSION=1.0.1
 LIBNAME=libhome_etc.so
 
 DIRS=sh src skel
-FILES=TODO COPYING AUTHORS HOME-ETC.txt README home_etc.spec
+FILES=TODO COPYING AUTHORS CONTRIBUTORS HOME-ETC.txt README home-etc.spec
 
 all: lib
 
@@ -27,6 +27,7 @@ rpm:
 
 install:
 	cd src && make install
+	cd sh && make install
 
 clean:
 	cd src && make clean

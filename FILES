@@ -1,4 +1,4 @@
-file			location
+filename		location
 
 home-etc.sh		/etc/profile.d
 home-etc.csh		/etc/profile.d
