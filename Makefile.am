@@ -8,14 +8,13 @@ rpm:
 	$(MAKE) dist
 	rpmbuild -ta --clean $(PACKAGE)-$(VERSION).tar.gz
 
-
 publish:
 	$(MAKE) distclean
 	$(MAKE) dist
 	scp $(PACKAGE)-$(VERSION).tar.gz siefca@kernel.pl:~/ftp-pld/distfiles
 	ssh siefca@kernel.pl 'chmod a+r ~/ftp-pld/distfiles/*'
 	cd ../SPECS && cvs up $(PACKAGE).spec
-	mv -f ../SPECS/$(PACKAGE).spec ../SPECS/$(PACKAGE).spec.bak
+	cp -f ../SPECS/$(PACKAGE).spec ../SPECS/$(PACKAGE).spec.bak
 	cp -f ./$(PACKAGE).spec ../SPECS/$(PACKAGE).spec
 	rm -f ../SOURCES/$(PACKAGE)-$(VERSION).tar.gz
 	cd ../SPECS && ./builder -5 $(PACKAGE).spec

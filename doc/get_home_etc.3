@@ -75,6 +75,33 @@ This function returns the pointer to a static buffer containing
 the pathname of a directory or NULL if something went bad and the path
 cannot be obtained.
 
+.SH EXAMPLES
+.sp
+.nf
+.ne 12
+.ta 8n 16n
+
+    #ifdef HAVE_HOME_ETC_H
+    # include <home_etc.h>
+    # define HOMEDIR _HEdir
+    #else
+    # define HOMEDIR getenv("HOME")
+    #endif
+    
+    ...
+
+    if ((home = HOMEDIR)) {
+        int len = strlen(home) + strlen("/.poldek_history") + 2;
+        histfile = alloca(len);
+        snprintf(histfile, len, "%s/.poldek_history", home);
+        read_history(histfile);
+    }
+
+    ...
+
+.ta
+.fi
+
 .SH WARNINGS
 Be ware of setting \fIuse_env\fP to non-zero for deamons
 which can inherit the environment variables at start and

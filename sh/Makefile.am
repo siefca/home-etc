@@ -1,9 +1,7 @@
-profiledir = @prefix@/etc/profile.d
+profiledir = /etc/profile.d
 
-bin_SCRIPTS = home-etc
-profile_SCRIPTS = home-etc.sh home-etc.csh
-
-EXTRA_DIST = $(SCRIPTS)
+dist_bin_SCRIPTS = home-etc
+dist_profile_SCRIPTS = home-etc.sh home-etc.csh
 
 dist-local:
 	./home-etc --update
@@ -12,5 +10,5 @@ dist-local:
 install: dist-local
 	$(mkinstalldirs) $(DESTDIR)$(profiledir)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	install -m755 home-etc.*sh $(DESTDIR)$(profiledir)
-	install -m755 home-etc $(DESTDIR)$(bindir)
+	$(install_sh_SCRIPT) home-etc.*sh $(DESTDIR)$(profiledir)
+	$(install_sh_SCRIPT) home-etc $(DESTDIR)$(bindir)

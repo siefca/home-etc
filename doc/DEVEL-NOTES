@@ -1,24 +1,12 @@
 
-
-Using home_etc in applications being modified.
-
-Interface description.
+Interface.
 
 libhome_etc gives you the stubs, which are described in the
 manual pages. It is recommended to start from the: man 3 home_etc
 
-function stubs:
-
-get_home_etc();
-home_etc_path();
-const char *get_home_etc_static();
-
-wrappers:
-
-_HEdir
-_HE
-
 ----------------------------------------------------------------------
+
+Using home_etc in applications being modified.
 
 A few steps which should be done:
 
@@ -42,7 +30,74 @@ A few steps which should be done:
     * make a: diff -Nur sources-1.0.4.orig sources-1.0.4 > sources-home_etc.patch
 
     * test if it's working (if not -> back to point 2)
-    
 
-Doing it in a proper way.
+----------------------------------------------------------------------
+
+Doing it in a proper way (application uses automake/autoconf).
+
+    * backup original sources directory under other name,
+      e.g: sources-1.0.4.orig, keeping sources-1.0.4 for
+      modifications
+
+    * recognize files which requires modification
+      (grep she sources against configuration filenames..)
+
+    * modify configure.in according to the given example:
+    
+    AC_DEFINE([ENABLE_HOME_ETC],1,[defined if HOME-ETC library is used])
+
+    ...
+
+    AC_ARG_WITH(home-etc,
+    [  --with-home-etc  compile with libhome_etc],
+    ENABLE_HOME_ETC=$enableval, ENABLE_HOME_ETC=no)
+    if test "${ENABLE_HOME_ETC}." != "yes."; then
+	AM_CONDITIONAL(ENABLE_HOME_ETC, false)
+    else
+	if test "$with_home_etc" != "yes"
+	then
+	    LDFLAGS="$LDFLAGS -L$with_home_etc/lib"
+	fi
+	
+	AC_CHECK_HEADERS(home_etc.h)
+	AC_CHECK_LIB(home_etc, get_home_etc_static,,AC_MSG_ERROR(["libhome_etc not found"]))
+	LIBS="$LIBS -lhome_etc"
+	AM_CONDITIONAL(ENABLE_HOME_ETC, true)
+	AC_DEFINE([ENABLE_HOME_ETC],1,[define whether to use the HOME-ETC library])
+    fi
+
+    * add the condition:
+    
+        #ifdef HAVE_HOME_ETC_H
+        # include <home_etc.h>
+        #endif
+    
+      in the beginning of each file, which will need the library functions
+
+    * expand it by defining the wrapper you'll need just after the condition, e.g.:
+    
+	#ifdef HAVE_HOME_ETC_H
+	# include <home_etc.h>
+	# define HOMEDIR _HEdir
+	#else
+	# define HOMEDIR getenv("HOME")
+	#endif
+	
+	and/or:
+	
+	#ifdef HAVE_HOME_ETC_H
+	# include <home_etc.h>
+	# define __HE(x) _HE(x)
+	#else
+	# define __HE(x) x
+	#endif
+	
+    * replace where it is wanted (for example) getenv("HOME") by the HOMEDIR
+
+    * and/or replace where it is wanted (for example) fopen(path, "r"); by the
+      fopen(__HE(path), "r");
+      
+    * make a: diff -Nur sources-1.0.4.orig sources-1.0.4 > sources-home_etc.patch
+
+    * test if it's working (if not -> back to point 2)
 
