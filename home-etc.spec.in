@@ -1,4 +1,4 @@
-# $Revision: 1.1 $, $Date: 2003/12/11 18:01:59 $
+# $Revision: 1.2 $, $Date: 2003/12/11 18:34:22 $
 Summary:	@SUMMARY@
 Summary(pl):	Biblioteki i programy zapewniaj±ce wsparcie dla HOME-ETC
 Name:		home-etc
@@ -82,9 +82,14 @@ które wyja¶niaj± w jaki sposób modyfikowaæ istniej±ce aplikacje.
 %setup -q
 
 %build
-%{__make} \
-	CC="%{__cc}" \
-	CFLAGS="%{rpmcflags} \$(WARN)"
+%{__libtoolize}
+%{__aclocal}
+%{__autoconf}
+%{__autoheader}
+%{__automake}
+%configure
+
+%{__make}
 
 
 %install
@@ -132,6 +137,9 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: home-etc.spec.in,v $
+Revision 1.2  2003/12/11 18:34:22  siefca
+- updates
+
 Revision 1.1  2003/12/11 18:01:59  siefca
 - autoheader added to autogen.sh script
 - std checks added to configure.ac

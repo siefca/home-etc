@@ -5,6 +5,7 @@ libhome_etc_la_LDFLAGS = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 libhome_etc_la_SOURCES = \
 						 core.c \
 						 core.h \
+						 includes.h \
 						 home_etc.c
 include_HEADERS = home_etc.h
 

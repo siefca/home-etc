@@ -4,6 +4,8 @@ home-etc-0*
 home-etc-1*
 home-etc-2*
 home-etc.spec
+config.h
+config.h.in
 test
 a.out
 *.o
