@@ -6,7 +6,7 @@
 int main (int argc, char *argv[])
 {
     int x;
-    const char *a[] = { "/home/users/siefca/.muttrc/x" };
+    const char *a[] = { ".muttrc" };
     
     printf("\nHOME_ETC:\t%s\n\n", get_home_etc_core(1));
 

@@ -60,9 +60,12 @@ const char *compare_paths(const char *a, const char *b)
 
     p = b;
     p += strlen(a);
-    
-    if (*p != '\0' && *(p+1) != '/')
+
+    if (*p != '\0' && *p != '/')
 	return NULL; /* strange, e.g.: /home/users/johnsomercfile */
+    p++;
+
+    printf("wydam: %s\n", p);
 
     return p;
 }
@@ -167,12 +170,13 @@ const char *home_etc_path_core(const char *path)
 	if (*(pathbuf+s) == '/')
 	    return NULL;
     }
+
+    /* fetch the home directory name */
     home_dir = obtain_home_dir(1);
     if (home_dir == NULL || *home_dir == '\0')
 	return NULL;
 
     /* now, get the absolute path of the given directory 	*/
-    /* then check whether the path is a home directory path	*/
 
     d = strdup(dirname(pathbuf));
     bzero(pathbuf, sizeof(pathbuf));
@@ -190,39 +194,52 @@ const char *home_etc_path_core(const char *path)
 	return NULL;
     }
 
-    /* if we are in home then we allow empty dirpart of a path */
-    if (d == NULL && !strcmp(dirbuf, home_dir))
-    {
-	if ((strlen(home_etc_dir)) + (strlen(f)) + 2 > sizeof(dirbuf))
-	    {
+	/* ding dogn! exception */
+        /* if we are in home then we allow empty dirpart of a path */
+	if (d == NULL && !strcmp(dirbuf, home_dir))
+	{
+	    if ((strlen(home_etc_dir)) + (strlen(f)) + 2 > sizeof(dirbuf))
+		{
+		    free(f);
+    		    return NULL; /* pathname too long */
+		}
+		bzero(dirbuf, sizeof(dirbuf));
+		strcpy(dirbuf, home_etc_dir);	/* HOME_ETC		*/
+		strcat(dirbuf, "/");		/* slash 		*/
+		strcpy(dirbuf, f);		/* filename		*/
 		free(f);
-    		return NULL; /* pathname too long */
-	    }
-	bzero(dirbuf, sizeof(dirbuf));
-	strcpy(dirbuf, home_etc_dir);	/* HOME_ETC		*/
-	strcat(dirbuf, "/");		/* slash 		*/
-	strcpy(dirbuf, f);		/* filename		*/
-	free(f);
-	return dirbuf;
-    }
+	    return dirbuf;
+	}
 
-    /* enter the obtained dir */
+    /* try enter the obtained dir */
+    bzero(buf, sizeof(buf));
     if ((chdir(d)) == -1)
     {
-    	free(f); free(d);
-        return NULL;
+	/* if we cannot enter it means the directory	*/
+	/* may not exist yet - it's not an error	*/
+	/* it may be a directory name part, appended	*/
+	/* to home, e.g.: /home/users/siefca/xxx	*/
+	/* in this case we can simply pass the given 	*/
+	/* path in hope it will be useful, whithout  	*/
+	/* resolving it using system calls..	 	*/
+	strncpy(buf, d, sizeof(buf));
+	/* todo: recursive from-front resolving in this case */
+    }
+    else
+    {
+	/* fetch the absolute pathname and put it into the buf */
+	if ((getcwd(buf, sizeof(buf)-1)) == NULL)
+	{
+	    free(f); free(d);
+	    chdir(dirbuf); /* back */
+		return NULL;
+	}
+	/* back to old dir */
+	chdir(dirbuf);
     }
 
-    /* fetch the absolute pathname and put it into the buf */
-    bzero(buf, sizeof(buf));
-    if ((getcwd(buf, sizeof(buf)-1)) == NULL)
-    {
-	free(f); free(d);
-	chdir(dirbuf); /* back */
-	return NULL;
-    }
-    /* back to old dir */
-    chdir(dirbuf);
+    /* check whether the path is a home directory path	*/
+    /* or whether the path contains it			*/
 
     /* difference test */
     p = compare_paths(home_dir, buf);
@@ -240,6 +257,9 @@ const char *home_etc_path_core(const char *path)
 	 + (strlen(f))
 	 + 4 > sizeof(dirbuf)    )
     {
+	printf("pathname len: %ud\n", (unsigned int)   (strlen(home_etc_dir))
+         + (strlen(p)) 
+	 + (strlen(f)));
     	free(f); free(d);
     	return NULL; /* pathname too long */
     }
