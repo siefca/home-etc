@@ -8,6 +8,8 @@
 # or later for copying conditions.  There is NO warranty.
 #
 
+REQ_PACKAGE="pam"
+
 echo "home-etc - move your dotfiles! v1.0.1 (LGPL)"
 echo
 echo "This script will move known configuration files and directories"
@@ -15,14 +17,78 @@ echo "which supports HOME-ETC from the given directory to the directory"
 echo "pointed out by the HOME_ETC variable."
 echo
 
-#echo "Enter the source directory"
+MYNAME="$0"
+if [ `echo "$MYNAME" | cut -b1,2 ` = "./" ]; then
+    MYNAME="`pwd`/`basename $MYNAME`"
+fi
+SHORTNAME=`basename $MYNAME`
+
+if [ x"$HOME_ETC" = x"" ]; then
+    echo "$SHORTNAME: cannot obtain HOME_ETC variable - set it up first!"
+    exit 1
+fi
+
+if [ ! -d "$HOME_ETC" ]; then
+    echo "$SHORTNAME: directory $HOME_ETC not found - creating one.."
+    mkdir -p "$HOME_ETC" || exit 1
+fi
+
+line=`grep -n -e "-home-etc-mark-" $MYNAME | grep -v grep | cut -d':' -f1` 2>/dev/null
+if [ x"$line" = x ]; then
+    echo "$SHORTNAME: mark-line not found, aboting!"
+    exit 1
+fi
+total=`cat $MYNAME | wc -l`
+line=$((total-line))
+
+echo
+echo -n "Enter the source directory or press ENTER [$HOME]: "
+REPLY=""
+read
+if [ x"$REPLY" = x ]; then
+    REPLY="$HOME"
+fi
+DESTINATION="$REPLY"
+
+echo "Press ENTER to continue or CTRL+C to abort now"
+read
+
+TMPFILE=`mktemp -q $TMP/$SHORTNAME.XXXXXX`
+if [ $? -ne 0 ]; then
+    echo "$SHORTNAME: Cannot create temp file, exiting.."
+    exit 1
+fi
+TMPFILES=`mktemp -q $TMP/$SHOTRNAME.XXXXXX`
+if [ $? -ne 0 ]; then
+    echo "$SHORTNAME: Cannot create temp file, exiting.."
+    exit 1
+fi
+
+tail -n $line $MYNAME | sort > $TMPFILE
+echo "$SHORTNAME: checking whether it is possible to query RPM.."
+rpm --quiet -q $REQ_PACKAGE && rpm -q --qf='%{name}\n' --whatrequires $REQ_PACKAGE 2>/dev/null | sort >$TMPFILES;
+userpm=`head -1 $TMPFILES`
+
+if [ x"$userpm" = x ]; then
+    echo "$SHORTNAME: cannot use RPM, trust my instincts.."
+    userpm=no
+else
+    echo "$SHORTNAME: RPM allows user queries - comparing package names.."
+    comm -3 "$TMPFILE" "$TMPFILES"
+    userpm=yes
+fi
+
+#echo "$SHORTNAME: moving files..."
+
+
+echo "done!"
 
 exit 0
 
-############
-# filename
+##################
+# package:filename
 #
 # -home-etc-mark-
-.mutt
-.muttrc
-.pine
+mutt:.mutt
+mutt:.muttrc
+pine:.pine
