@@ -1,9 +1,9 @@
-# $Revision: 1.17 $, $Date: 2003/12/10 13:16:22 $
+# $Revision: 1.18 $, $Date: 2003/12/10 16:38:53 $
 Summary:	HOME-ETC support for PLD Linux
 Summary(pl):	Wsparcie mechanizmu HOME-ETC dla PLD Linux
 Name:		home-etc
-Version:	1.0.5
-Release:	1
+Version:	1.0.6
+Release:	7
 Epoch:		1
 License:	LGPL
 Group:		Base
@@ -132,6 +132,14 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: home-etc.spec,v $
+Revision 1.18  2003/12/10 16:38:53  siefca
+- serious code reorganization
+- added macros for easier usage (_HE, _HEdir, _HEn, _HEndir, ___HE, ___HEdir)
+- home_etc_path() parses now uses caching get_home_etc_static()
+- added home_etc_reset() which may be used to flush the cache
+- examples added
+- documentation updated
+
 Revision 1.17  2003/12/10 13:16:22  siefca
 - added manual pages
 - documentation section reorganized for devel subpackage

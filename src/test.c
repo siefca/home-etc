@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <sys/types.h>
 
-#include "core.h"
+#include <sys/param.h>
+#include "home_etc.h"
 
 int main (int argc, char *argv[])
 {
@@ -14,13 +15,13 @@ int main (int argc, char *argv[])
 			"tmp/.muttrc", "tmp/.muttrc/"
 		      };
 
-    printf("\nHOME_ETC:\t%s\n\n", get_home_etc_core(1));
+    printf("\nHOME_ETC:\t%s\n\n", get_home_etc(1));
 
     for (x = 0; x < sizeof(a) / sizeof(char *); x++)
     {
 	printf(" path:\t\t%s\n result:\t%s\n----------------------------\n",
 	        a[x],
-		home_etc_path_core(a[x]));
+		home_etc_path(a[x],1));
     }
 
     /* hard-core routines */
@@ -38,7 +39,7 @@ int main (int argc, char *argv[])
 
     printf(" path:\t\t%s\n result:\t%s\n----------------------------\n",
 	        b,
-		home_etc_path_core(b));
+		home_etc_path(b,1));
 
     printf("press any key...\n");
     (void) getc(stdin);
@@ -49,7 +50,7 @@ int main (int argc, char *argv[])
 
     printf(" path:\t\t%s\n result:\t%s\n----------------------------\n",
 	        b,
-		home_etc_path_core(b));
+		home_etc_path(b,1));
 
     printf("press any key...\n");
     (void) getc(stdin);
@@ -60,7 +61,7 @@ int main (int argc, char *argv[])
 
     printf(" path:\t\t%s\n result:\t%s\n----------------------------\n",
 	        b,
-		home_etc_path_core(b));
+		home_etc_path(b,1));
 
     return 0;
 }

@@ -4,7 +4,7 @@
 # It allows you to move your configuration files into
 # an alternative directory.
 #
-# See /usr/share/doc/home-etc/README for more info.
+# See /usr/share/doc/home-etc-*/README for more info.
 #
 # First readable line of this file should contain the pathname
 # of your personal 'etc' directory. If the given pathname

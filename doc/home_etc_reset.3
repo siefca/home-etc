@@ -1,0 +1,45 @@
+.\" Copyright (c) 2003 by Pawe³ Wilk <siefca@gnu.org>
+.\"
+.\" Permission is granted to copy, distribute and/or modify this document
+.\" under the terms of the GNU Free Documentation License, Version 1.2
+.\" or any later version published by the Free Software Foundation;
+.\" with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+.\" A copy of the license is included in the section entitled "GNU
+.\" Free Documentation License"; if it's not, contact Free Software Foundation, Inc.
+.\" 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA to obtain one.
+.\"
+.TH home_etc_reset "3" "PLD Linux/GNU" "December 2003" "HOME-ETC"
+.SH NAME
+home_etc_reset \- reset HOME-ETC internal cache buffer
+.SH SYNOPSIS
+.nf
+.B #include <home_etc.h>
+.sp
+.BI "void home_etc_reset();"
+.fi
+.SH DESCRIPTION
+The function \fBhome_etc_reset(3)\fP is used to reset internal buffer,
+which normaly keeps the HOME_ETC directory name string. It is recommended
+to use this function, when you want to force the library to obtain \fBHOME_ETC\fP
+directory once again, while successive invoking \fBhome_etc_path(3)\fP. Note,
+that \fBhome_etc_path(3)\fP function uses \fBget_home_etc_static(3)\fP to obtain
+the directory, and the \fBget_home_etc_static(3)\fP stores the result into the cache.
+
+.SH "RETURN VALUE"
+This function returns no value.
+
+.SH "SEE ALSO"
+.BR home_etc(3)
+.BR home_etc_path(3),
+.BR get_home_etc(3),
+.BR get_home_etc_static(3)
+    
+.SH LICENSE
+The HOME-ETC library is distributed under the terms of GNU LGPL.
+This documentation is distributed under the terms of GNU FDL.
+       
+.SH AUTHOR
+Pawel Wilk <siefca@gnu.org>
+There was also a lot of other people, who have contributed to this code
+and/or helped with patching applications. See the AUTHORS and the CONTRIBUTORS files.
+

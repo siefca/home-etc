@@ -14,30 +14,43 @@
 #ifndef	__HOME_ETC_H
 #define	__HOME_ETC_H
 
-/* HOME_ETC location fetcher */
+/* HOME_ETC location fetchers */
 
-const char *get_home_etc(char use_home_env);
+const char *get_home_etc(char use_env);
+const char *get_home_etc_static(char use_env);
 
 /* pathname reconstructor */
 
-const char *home_etc_path(const char *pathname);
+const char *home_etc_path(const char *pathname, char use_env);
 
-/* a sweet wrapper */
+/* a sweet wrappers */
 
 const char *_HE(const char *pathname);
+const char *_HEn(const char *pathname);
 
-/* a sweetest wrapper */
+/* a sweetest wrappers */
 
-const char *get_home_etc_static();
+#define	_HEdir get_home_etc_static(1)
+#define	_HEndir get_home_etc_static(0)
 
-#define	_HEdir get_home_etc_static()
+/* reset cache */
+void home_etc_reset();
+
+/* for lazy programmers */
+
+#ifdef _HE_DAEMON
+# define ___HE _HEn
+# define ___HEdir _HEndir
+#else
+# define ___HE _HE
+# define ___HEdir _HEdir
+#endif
 
 #endif
 
 
-/* if use_home_env is set to != 0 then the HOME		*/
-/* environment variable will be used to obtain		*/
-/* the location of the home directory			*/
-/* if it won't succeed then the password database	*/
-/* will be used						*/
+/* if use_env is set to != 0 then the HOME and HOME_ETC	*/
+/* environment variables will be used to obtain		*/
+/* the location of the home directory and HOME_ETC	*/
+/* directories.						*/
 

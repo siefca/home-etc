@@ -1,4 +1,4 @@
-# $Id: zrobione,v 1.3 2003/12/08 12:07:08 siefca Exp $
+# $Id: zrobione,v 1.4 2003/12/10 16:38:54 siefca Exp $
 # This file contains status information for packages
 # patched to be HOME-ETC compliant.
 #
@@ -23,8 +23,8 @@
 #
 
 [siefca]
-qmail		X	.qmail*			old way, hard ~/etc
-mutt		S	.mutt*:.Mutt*		uses libhome_etc
+qmail		X	.qmail*		old way, hard ~/etc
+mutt		S	.mutt*:.Mutt*	uses libhome_etc
 pine		R	.pinerc
 
 [yossa]
@@ -44,11 +44,11 @@ wminet		S	.fixme
 signify		?	.fixme
 
 [waszi]
-slrn		?	.slrnrc			documentation omited
+slrn		?	.slrnrc		documentation omited
 
 [orzech]
 cvs		S	.cvs*
-ekg		S	.ekg:.gg		incorporated into original sources
+ekg		S	.ekg:.gg	incorporated into original sources
 lftp		S	.fixme
 screen		S	.screenrc
 sms		S	.fixme

@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.16 2003/12/07 17:58:57 siefca Exp $
+# $Id: Makefile,v 1.17 2003/12/10 16:38:55 siefca Exp $
 NAME=home-etc
 CC=gcc
 RANLIB=ranlib
@@ -22,8 +22,8 @@ $(OUT_STATIC): $(OBJECTS)
 	ar -cr $@ $(OBJECTS)
 	$(RANLIB) $@
 
-test: core.c test.c
-	$(CC) $(CFLAGS) core.c test.c -o test
+test: core.o home_etc.o test.c
+	$(CC) $(CFLAGS) core.o home_etc.o test.c -o test
 
 clean:
 	rm -f a.out example *.a *.o test *.so *.so.$(VERSION) *.so.1

@@ -20,7 +20,7 @@
 #include <string.h>
 #include <home_etc.h> 		/***/
 
-/* note that H_E macro is safe, it will never reports NULL	*/
+/* note that _HE macro is safe, it will never reports NULL	*/
 /* since its argument was not NULL				*/
 
 int main(int argc, char *argv[])
