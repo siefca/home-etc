@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.12 2003/11/30 12:05:54 siefca Exp $
+# $Id: Makefile,v 1.13 2003/11/30 12:27:45 siefca Exp $
 NAME=home-etc
 VERSION=1.0.1
 CC=gcc
@@ -27,7 +27,7 @@ test: core.c test.c
 	$(CC) $(CFLAGS) core.c test.c -o test
 
 clean:
-	rm -f a.out *.a *.o test *.so *.so.$(VERSION) *.so.1
+	rm -f a.out example *.a *.o test *.so *.so.$(VERSION) *.so.1
 
 install:
 	install -d $(DESTDIR)/usr/lib
@@ -36,5 +36,7 @@ install:
 	install -s -m755 $(OUT) $(DESTDIR)/usr/lib
 	install -m755 $(OUT_STATIC) $(DESTDIR)/usr/lib
 	install -m755 $(LA_FILE) $(DESTDIR)/usr/lib
+	ln -s -f $(OUT) $(DESTDIR)/usr/lib/libhome_etc.so
+	ln -s -f $(OUT) $(DESTDIR)/usr/lib/libhome_etc.so.1.0.1
 	install -m644 home_etc.h $(DESTDIR)/usr/include/home_etc.h
 	install -m644 example*.c $(DESTDIR)/usr/src/examples/$(NAME)-$(VERSION)

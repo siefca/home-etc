@@ -1,4 +1,4 @@
-# $Revision: 1.4 $, $Date: 2003/11/28 18:05:25 $
+# $Revision: 1.5 $, $Date: 2003/11/30 12:27:45 $
 Summary:	HOME-ETC support for PLD Linux
 Summary(pl):	Wsparcie mechanizmu HOME-ETC dla PLD Linux
 Name:		home-etc
@@ -23,12 +23,31 @@ w podkatalogu wskazanym przez u¿ytkownika, zamiast bezpo¶rednio
 w jego katalogu domowym. Pakiet ten zapewnia wsparcie dla tego
 mechanizmu.
 
+%package static
+Summary:	Static version of HOME-ETC library
+Summary(pl):	Wersja statyczna biblioteki HOME-ETC
+License:	LGPL
+Group:		Development/Libraries
+Requires:	%{name} = %{epoch}:%{version}
+
+%description static
+HOME-ETC is an idea to keep configuration files in a subdirectory
+specified by user, instead of its home directory. This package
+contains static elements of the library.
+
+%description static -l pl
+HOME-ETC jest pomys³em, aby przechowywaæ pliki konfiguracyjne
+w podkatalogu wskazanym przez u¿ytkownika, zamiast bezpo¶rednio
+w jego katalogu domowym. Pakiet ten zawiera statyczne elementy
+biblioteki.
+
 %package devel
 Summary:	Header files for HOME-ETC
 Summary(pl):	Pliki nag³ówkowe dla mechanizmu HOME-ETC
 License:	LGPL
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}
+Requires:	%{name}-static = %{epoch}:%{version}
 
 %description devel
 HOME-ETC is an idea to keep configuration files in a subdirectory
@@ -83,7 +102,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc FILES README CONTRIBUTORS AUTHORS COPYING TODO HOME-ETC.txt
-%attr(755,root,root) %{_libdir}/lib*.so
+%attr(755,root,root) %{_libdir}/lib*.so.*.*
+%attr(755,root,root) %{_libdir}/lib*.la
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) /etc/profile.d/home-etc.*sh
 /etc/skel/.home_etc
@@ -91,6 +111,10 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %{_includedir}/*.h
+
+%files static
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/lib*.a
 
 %files examples
 %defattr(644,root,root,755)
@@ -102,6 +126,9 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: home-etc.spec,v $
+Revision 1.5  2003/11/30 12:27:45  siefca
+- static subpackage added
+
 Revision 1.4  2003/11/28 18:05:25  siefca
 - debugging removed from script
 - Makefile fixes
