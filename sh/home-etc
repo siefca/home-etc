@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# home-etc library: obtain user-decided configuration directory
+#
+# Copyright (C) 2003 Pawel Wilk <siefca@gnu.org>,
+#
+# This is free software; see the GNU Lesser General Public License version 2
+# or later for copying conditions.  There is NO warranty.
+#
+
+echo "home-etc - move your dotfiles! v1.0.1 (LGPL)"
+echo
+echo "This script will move known configuration files and directories"
+echo "which supports HOME-ETC from the given directory to the directory"
+echo "pointed out by the HOME_ETC variable."
+echo
+
+#echo "Enter the source directory"
+
+exit 0
+
+############
+# filename
+#
+# -home-etc-mark-
+.mutt
+.muttrc
+.pine

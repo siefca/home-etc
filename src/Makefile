@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.5 2003/11/27 17:51:01 siefca Exp $
+# $Id: Makefile,v 1.6 2003/11/28 11:13:17 siefca Exp $
 
 CC=gcc
 CFLAGS=-fPIC -O2 -Wall -Werror -pedantic
@@ -15,8 +15,8 @@ $(OBJECTS): $(OBJECTS:.o=.c)
 lib%.so: %.o
 	ld $(LDFLAGS) -o $@ $<
 
-test: $(OBJECTS) test.c
-	$(CC) $(CFLAGS) $(OBJECTS) test.c -o test
+test: core.c test.c
+	$(CC) $(CFLAGS) core.c test.c -o test
 
 clean:
 	rm -f a.out *.o test $(OUT)
