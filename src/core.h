@@ -17,10 +17,8 @@
 #define	ENV_VAR		"HOME_ETC"
 #define	HELPER_FILENAME	".home_etc"
 
-const char *absolutize_path(const char *path, char *ptr);
 const char *obtain_home_dir(char use_home_env);
 const char *get_home_etc_core(char use_home_env);
-const char *compare_paths(const char *a, const char *b);
 const char *home_etc_path_core(const char *path);
 
 #endif

@@ -1,2 +1,1 @@
-- version which buffer can be free()d
 - automake/libtoolize :>

@@ -16,85 +16,9 @@
 
 #include "core.h"
 
-inline void zero_last_path_element(char *path)
-{
-    char *p;
-    
-    p = strrchr(path, (int) '/');
-    if (p != NULL)
-    {
-	*p = '\0';
-	return;
-    }
-    else	/* no more to cut */
-    {		/* has to use the fs */
-	
-    }
-}
+/*********************************************************************/
 
-const char *absolutize_path(const char *path, char *ptr)
-{
-    char *p, *q;
-    static char *pathbuf[MAXPATHLEN];
-    char *dirbuf[MAXPATHLEN];
-    
-    if (ptr == NULL)
-	bzero(pathbuf, sizeof(pathbuf));
-
-    p = ptr;			/* token begin */
-    q = strchr(ptr, (int)'/');	/* token end */
-    
-    if (q == NULL)
-	q = p + strlen(p);
-    
-    strncpy(dirbuf, p, p-q);
-    if (p == q)
-	*dirbuf == '\0';
-    else
-    {
-	if (*dirbuf == '.')
-	{
-	    if (*(dirbuf+1) == '/')
-		*dirbuf = '\0';
-	    else
-	    {
-		if (*(dirbuf+1) == '.')
-		{
-		    *dirbuf = '\0';
-		    zero_last_path_element(pathbuf);
-		}
-	    }
-	}
-    }
-    
-    chdir(
-}
-
-const char *obtain_home_dir(char use_home_env)
-{
-    struct passwd *pw;
-    char *p = NULL;
-
-    if (use_home_env)
-    {
-        p = getenv("HOME");
-    }
-    if (p != NULL)
-    {
-        return p;
-    }
-
-    pw = getpwuid(geteuid());
-    endpwent();
-    if (pw != NULL && pw->pw_dir != NULL && *pw->pw_dir != '\0')
-    {
-	return pw->pw_dir;
-    }
-    
-    return NULL;
-}
-
-const char *compare_paths(const char *a, const char *b)
+inline const char *compare_paths(const char *a, const char *b)
 {
     size_t s_a, s_b;
     register const char *p;
@@ -124,6 +48,117 @@ const char *compare_paths(const char *a, const char *b)
     return p;
 }
 
+/*********************************************************************/
+
+inline static int canonize_dir(char *path, size_t s)
+{
+    char buff[MAXPATHLEN];
+    
+    if (! getcwd(buff, sizeof(buff)-2))
+	return -1;
+    buff[MAXPATHLEN-1] = '\0';
+    if (chdir(path) == -1)
+	return -1;
+    if (! getcwd(path, s))
+    {
+	chdir(buff);
+	return -1;
+    }
+
+    if (*path == '/' && *(path+1) == '\0')
+	*path = '\0';
+
+    chdir(buff);
+    return 0;
+}
+
+/*********************************************************************/
+
+static const char *canonize_path(const char *path)
+{
+    int counter = 254;
+    size_t s;
+    char *p = NULL, *q = NULL;
+    char buff[MAXPATHLEN];
+    static char pathbuf[MAXPATHLEN];
+
+    bzero(buff, sizeof(buff));
+    bzero(pathbuf, sizeof(pathbuf));
+
+    s = strlen(path);
+    if (s > sizeof(buff) - 2 || s <= 0)
+	return NULL;
+
+    if (*path != '/')
+    {
+	if (! getcwd(buff, sizeof(buff)))
+	    return NULL;
+	s += strlen(buff);
+	if (s > sizeof(pathbuf) - 2)
+	    return NULL;
+	strcpy(pathbuf, buff);
+	*buff = '\0';
+    }
+
+    strncat(buff, path, sizeof(buff)-1);
+    p = buff;
+    if (*p == '/') p++;
+    s = strlen(pathbuf) - 2;
+
+    while (s > 0 && counter > 0 && (q = strchr(p, (int)'/')))
+    {
+	if (*(q+1) != '\0')
+	    *q = '\0';
+	s -= strlen(p) + 1;
+	if (s <= 0) return NULL;
+	strcat(pathbuf, "/");
+	strcat(pathbuf, p);
+	p = q+1;
+	if (canonize_dir(pathbuf, s) == -1)
+	    break;
+	counter--;
+    }
+    if (s <= 0 || counter <= 0) return NULL;
+    
+    if (p && *p != '\0')
+    {
+	s = sizeof(pathbuf) - strlen(pathbuf) - 2;
+	if (strlen(p) > s) return NULL;
+	strcat(pathbuf, "/");
+	strcat(pathbuf, p);
+    }
+
+    return pathbuf;
+}
+
+/*********************************************************************/
+
+const char *obtain_home_dir(char use_home_env)
+{
+    struct passwd *pw;
+    char *p = NULL;
+
+    if (use_home_env)
+    {
+        p = getenv("HOME");
+    }
+    if (p != NULL)
+    {
+        return p;
+    }
+
+    pw = getpwuid(geteuid());
+    endpwent();
+    if (pw != NULL && pw->pw_dir != NULL && *pw->pw_dir != '\0')
+    {
+	return pw->pw_dir;
+    }
+    
+    return NULL;
+}
+
+/*********************************************************************/
+
 const char *get_home_etc_core(char use_home_env)
 {
     FILE *f;
@@ -146,25 +181,25 @@ const char *get_home_etc_core(char use_home_env)
 	{
 	    bzero(home_dir, sizeof(home_dir));
 	    strncpy(home_dir, p, sizeof(home_dir));
-	    s = (sizeof(home_etc_path)) - (sizeof(HELPER_FILENAME)) - 2;
+            s = (sizeof(home_etc_path)) - (sizeof(HELPER_FILENAME)) - 2;
 	    d = strlen(home_dir);
 	    if (s >= d)
 	    {
-		bzero(home_etc_path, sizeof(home_etc_path));
-		strncpy(home_etc_path, home_dir, d);
-		strncat(home_etc_path, "/", 1);
-		strncat(home_etc_path, HELPER_FILENAME, sizeof(HELPER_FILENAME));
-		f = fopen(home_etc_path, "r");
-		if (f != NULL)
-		{
-		    bzero(home_etc_path, sizeof(home_etc_path));
+	        bzero(home_etc_path, sizeof(home_etc_path));
+	        strncpy(home_etc_path, home_dir, d);
+	        strncat(home_etc_path, "/", 1);
+	        strncat(home_etc_path, HELPER_FILENAME, sizeof(HELPER_FILENAME));
+	        f = fopen(home_etc_path, "r");
+	        if (f != NULL)
+	        {
+	    	    bzero(home_etc_path, sizeof(home_etc_path));
 		    fgets(home_etc_path, (sizeof(home_etc_path)-2), f);
 		    fclose(f);
 		    if (*home_etc_path != '\0' && *home_etc_path != '\n' && *home_etc_path != '#')
 		    {
-			d = strlen(home_etc_path) - 1;
-			if (d >= 0 && home_etc_path[d] == '\n')
-			{
+		        d = strlen(home_etc_path) - 1;
+		        if (d >= 0 && home_etc_path[d] == '\n')
+		        {
 			    home_etc_path[d] = '\0'; /* chop chop */
 			}
 			if (*home_etc_path != '/') /* relative path? */
@@ -172,13 +207,13 @@ const char *get_home_etc_core(char use_home_env)
 			    d++;
 			    if ((sizeof(home_etc_path)) > 4+d+strlen(home_dir))
 			    {
-				strncat(home_dir, "/", 1);
-				strncat(home_dir, home_etc_path, d);
-				strncpy(home_etc_path, home_dir, strlen(home_dir));
+			        strncat(home_dir, "/", 1);
+			        strncat(home_dir, home_etc_path, d);
+			        strncpy(home_etc_path, home_dir, strlen(home_dir));
 			    }
 			    else
 			    {
-				return NULL; /* err: pathname too long */
+			        return NULL; /* err: pathname too long */
 			    }
 			}
 			return home_etc_path;
@@ -191,30 +226,59 @@ const char *get_home_etc_core(char use_home_env)
     return NULL; /* say noooo */
 }
 
+/*********************************************************************/
+
 const char *home_etc_path_core(const char *path)
 {
     static char dirbuf[MAXPATHLEN];
     char pathbuf[MAXPATHLEN];
-    char buf[MAXPATHLEN];
-    const char *home_etc_dir, *home_dir, *p;
-    char *f, *d;
-    char wasdir = 0;
+    char home_dir[MAXPATHLEN];
+    const char *home_etc_dir, *p;
     size_t s;
 
     home_etc_dir = get_home_etc_core(1);
-    if (home_etc_dir == NULL || path == NULL || *path == '\0')
+    p = obtain_home_dir(1);
+    if (home_etc_dir == NULL || p == NULL || path == NULL ||
+        *path == '\0' || *home_etc_dir == '\0' || *p == '\0')
 	return NULL;
-    
+
     s = strlen(path);
     if (strlen(path) > sizeof(pathbuf)-2)
 	return NULL;
 
+    bzero(home_dir, sizeof(home_dir));
     bzero(pathbuf, sizeof(pathbuf));
-    strncpy(pathbuf, path, sizeof(pathbuf));
+    bzero(dirbuf, sizeof(dirbuf));
 
-    /* step 1 - check whether the path is relative */
-    if (*pathbuf != '/' &&
-       !(*pathbuf == '.' && (*(pathbuf+1) == '/' || *(pathbuf+1) == '.'))
-        *(pathbuf+1) == './'
+    /* absolutize home directory name */
+    strncpy(home_dir, p, sizeof(home_dir)-1);
+    p = canonize_path(home_dir);
+    if (p == NULL || *p == '\0')
+	return NULL;
 
+    /* absolutize given pathname */
+    p = canonize_path(path);
+    if (p == NULL || *p == '\0')
+	return NULL;
+
+    /* make a difference test */
+    p = compare_paths(home_dir, p);
+    if (p == NULL)
+	return NULL;
+
+    /* now the p variable contains		*/
+    /* the rest of the path, after homedir path	*/
+
+    if (   (strlen(home_etc_dir))
+         + (strlen(p)) 
+	 + 4 > sizeof(dirbuf)    )
+    	return NULL; /* pathname too long */
+
+    bzero(dirbuf, sizeof(dirbuf));
+    strcpy(dirbuf, home_etc_dir);	/* HOME_ETC		*/
+    strcat(dirbuf, "/");		/* slash 		*/
+    if (*p != '\0')
+	strcat(dirbuf, p);		/* rest of the dir	*/
+
+    return dirbuf;
 }
