@@ -39,6 +39,30 @@ const char *obtain_home_dir(char use_home_env)
     return NULL;
 }
 
+const char *compare_paths(const char *a, const char *b)
+{
+    size_t s_a, s_b;
+    register const char *p;
+
+    if (a == NULL || b == NULL)
+	return NULL;
+    if (*a == '\0' || *b == '\0')
+	return NULL;
+
+    s_a = strlen(a);
+    s_b = strlen(b);
+    if (s_a > s_b)
+	return NULL;
+
+    if (strncmp(a, b, s_a))
+	return NULL;    
+
+    p = b;
+    p += strlen(a);
+    
+    return p;
+}
+
 const char *get_home_etc_core(char use_home_env)
 {
     FILE *f;

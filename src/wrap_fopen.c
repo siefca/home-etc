@@ -7,6 +7,7 @@
  *
  */
 
+#include <unistd.h>
 #include <stdio.h>
 #include <libgen.h>
 #include <sys/param.h>
@@ -20,47 +21,77 @@
 
 FILE *home_etc_fopen_core(const char *path, const char *mode)
 {
+    char pathbuf[MAXPATHLEN];
+    char dirbuf[MAXPATHLEN];
     char buf[MAXPATHLEN];
-    const char *home_etc_dir, *home_dir;
-    char *h, *b, *d;
-    char wasdir=0;
+    const char *home_etc_dir, *home_dir, *d;
+    char wasdir = 0;
     size_t s;
     
     home_etc_dir = get_home_etc_core(1);
     if (home_etc_dir == NULL || path == NULL || *path == '\0')
-    {
 	return fopen(path, mode);
-    }
     
-    s = strlen(path);    
-    if (s <= 0 || *(path+s-1) == '/')
-    {
+    s = strlen(path);
+    if (strlen(path) > sizeof(pathbuf)-2)
 	return fopen(path, mode);
-    }
-	
-    home_dir = obtain_home_dir(1);
-    if (home_dir == NULL || *home_dir == '\0')
+
+    bzero(pathbuf, sizeof(pathbuf));
+    strncpy(pathbuf, path, sizeof(pathbuf));
+
+    /* is it a directory at the end?	*/
+    /* if yes, mark it and remember	*/
+    s--;
+    if (!s) return fopen(path, mode);
+    if (s >= 0 && *(pathbuf+s) == '/')
     {
-	return fopen(path, mode);
+	wasdir = 1;
+	*(pathbuf+s) = '\0';
+	s--;
+	if (!s || *(pathbuf+s) == '/')
+	    return fopen(path, mode);
     }
 
-    if (*path == '/')
+    home_dir = obtain_home_dir(1);
+    if (home_dir == NULL || *home_dir == '\0')
+	return fopen(path, mode);
+
+    /* now, get the absolute path of the given directory 	*/
+    /* then check whether the path is a home directory path	*/
+
+    d = dirname(pathbuf);
+    if (d == NULL)
+        return fopen(path, mode);
+
+    /* remember current dir */
+    bzero(dirbuf, sizeof(dirbuf));
+    if ((getcwd(dirbuf, sizeof(dirbuf)-1)) == NULL)
+	return fopen(path, mode);
+    /* enter the dir */
+    if ((chdir(d)) == -1)
+        return fopen(path, mode);
+    /* fetch the absolute name */
+    bzero(buf, sizeof(buf));
+    if ((getcwd(buf, sizeof(buf)-1)) == NULL)
     {
-	/* try to guess if the dir component of the path is a homedir	*/
-	/* if yes - substitute it using home_etc			*/
-	d = dirname(path);
-	if (d == NULL)
-	{
-	    return fopen(path, mode);
-	}
-	
-	
+	chdir(dirbuf); /* back */
 	return fopen(path, mode);
     }
-    else
-    {
-	/* we have here the relative path - try to guess if the current dir */
-	/* is a home dir, and if yes, attach the home_etc dir		    */
-	strncpy(home_etc_path, 
-    }
+    /* back to old dir */
+    chdir(dirbuf);
+
+    /* difference test */
+    d = compare_paths(home_dir, d);
+    
+    if (d == NULL)	/* does not contain home location */
+	return fopen(path, mode);
+
+    /* compile output directory string	*/
+    /* substitution:			*/
+    /* HOME into HOME_ETC		*/
+    /* rest into rest			*/
+    /* add slash if there was any	*/
+
+    
+
 }

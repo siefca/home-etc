@@ -16,3 +16,4 @@
 
 const char *obtain_home_dir(char use_home_env);
 const char *get_home_etc_core(char use_home_env);
+const char *compare_paths(const char *a, const char *b);
