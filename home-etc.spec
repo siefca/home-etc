@@ -1,9 +1,9 @@
-# $Revision: 1.6 $, $Date: 2003/11/30 12:28:44 $
+# $Revision: 1.7 $, $Date: 2003/12/05 17:21:50 $
 Summary:	HOME-ETC support for PLD Linux
 Summary(pl):	Wsparcie mechanizmu HOME-ETC dla PLD Linux
 Name:		home-etc
 Version:	1.0.1
-Release:	1
+Release:	2
 Epoch:		1
 License:	LGPL
 Group:		Base
@@ -98,10 +98,13 @@ install -d $RPM_BUILD_ROOT/etc/skel
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post   -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
+
 %files
 %defattr(644,root,root,755)
 %doc FILES README CONTRIBUTORS AUTHORS COPYING TODO HOME-ETC.txt
-%attr(755,root,root) %{_libdir}/lib*.so.*.*
+%attr(755,root,root) %{_libdir}/lib*.so*
 %attr(755,root,root) %{_libdir}/lib*.la
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) /etc/profile.d/home-etc.*sh
@@ -125,6 +128,10 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: home-etc.spec,v $
+Revision 1.7  2003/12/05 17:21:50  siefca
+- added ldconfig in post(un)
+- fixed files section
+
 Revision 1.6  2003/11/30 12:28:44  siefca
 - typo fixed
 

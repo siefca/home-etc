@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.13 2003/11/30 12:27:45 siefca Exp $
+# $Id: Makefile,v 1.14 2003/12/05 17:21:51 siefca Exp $
 NAME=home-etc
 VERSION=1.0.1
 CC=gcc
@@ -37,6 +37,6 @@ install:
 	install -m755 $(OUT_STATIC) $(DESTDIR)/usr/lib
 	install -m755 $(LA_FILE) $(DESTDIR)/usr/lib
 	ln -s -f $(OUT) $(DESTDIR)/usr/lib/libhome_etc.so
-	ln -s -f $(OUT) $(DESTDIR)/usr/lib/libhome_etc.so.1.0.1
+	ln -s -f $(OUT) $(DESTDIR)/usr/lib/libhome_etc.so.$(VERSION)
 	install -m644 home_etc.h $(DESTDIR)/usr/include/home_etc.h
 	install -m644 example*.c $(DESTDIR)/usr/src/examples/$(NAME)-$(VERSION)
