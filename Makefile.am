@@ -9,7 +9,7 @@ rpm:
 	rpmbuild -ta --clean $(PACKAGE)-$(VERSION).tar.gz
 
 publish:
-	$(MAKE) distclean
+	$(MAKE) clean
 	$(MAKE) dist
 	scp $(PACKAGE)-$(VERSION).tar.gz siefca@kernel.pl:~/ftp-pld/distfiles
 	ssh siefca@kernel.pl 'chmod a+r ~/ftp-pld/distfiles/*'
