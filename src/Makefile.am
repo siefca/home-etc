@@ -19,11 +19,11 @@ example3_LDADD = libhome_etc.la
 
 TESTS=test
 
-examples_SOURCES = \
+examples = \
 						example.c \
 						example2.c \
 						example3.c
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(examplesdir)
-	$(INSTALL_DATA) $(examples_SOURCES) $(DESTDIR)$(examplesdir)
+	$(INSTALL_DATA) $(examples) $(DESTDIR)$(examplesdir)
