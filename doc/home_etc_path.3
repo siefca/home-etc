@@ -1,0 +1,121 @@
+.\" Copyright (c) 2003 by Pawe³ Wilk <siefca@gnu.org>
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
+.\" USA.
+.\"
+.TH home_etc_path "3" "PLD Linux/GNU" "December 2003" "HOME-ETC"
+.SH NAME
+home_etc_path \- pathname reconstructor
+.SH SYNOPSIS
+.nf
+.B #include <home_etc.h>
+.sp
+.BI "const char *home_etc_path(const char *" pathname ", char " use_home_env );
+.sp
+.BI "const char *_HE(const char *" pathname );
+.fi
+.SH DESCRIPTION
+This function rewrites the given \fIpathname\fP according
+to the result of \fBget_home_etc(3)\fP. It tries to canonize
+as much parts of the directories as it is possible in:
+pathname, (obtained beforre) home directory, and \fBHOME_ETC\fP.
+
+Substitution is made for the found string of the user's home directory,
+which is searched in the pathname. The home-dir part of the string
+becomes the value of the \fBHOME_ETC\fP obtained before.
+    
+The use_home_env is simply passed to the \fBget_home_etc(3)\fP.
+    
+The function iterates using \fBchdir(2)\fP and \fBgetcwd(3)\fP to canonize parts
+of pathnames.
+    
+\fB_HE\fP is a wrapper for this function, which never returns NULL, since NULL
+wasn't given as an argument. It calls \fBhome_etc_path(3)\fP and in case
+of failure it simply returns the given pathname. It alwas sets \fIuse_home_env\fP
+to a non-zero.
+
+.SH "RETURN VALUE"
+This function returns the pointer to a static buffer containing
+the newly generated pathname or NULL if something went bad.
+    
+\fB_HE\fP works same way but never returns NULL, since the NULL wasn't
+given as an argument. 
+
+.SH EXAMPLES
+for HOME=\fI/home/users/siefca\fP
+and HOME_ETC=\fI/usr/siefca-configs\fP
+.sp    
+the function:
+.sp
+.BI "home_etc_path(" /home/users/siefca/.muttrc ", " 1 );
+.sp    
+will return
+.I /usr/siefca-configs/.muttrc
+.LP
+And this is an elegant way of use \fB_HE\fP wrapper while
+modifying automake/autoconf compliant applications.
+Look, it's clear and easy:
+.sp
+.nf
+.ne 12
+.ta 8n 16n
+
+    #ifdef HAVE_HOME_ETC_H
+    # include <home_etc.h>
+    # define __HE(x) _HE(x)
+    #else
+    # define __HE(x) x
+    #endif
+    
+    ...
+
+    /* was: f = fopen(filename, "r"); */
+
+    f = fopen(__HE(filename), "r");
+
+    ...
+
+.ta
+.fi
+
+.SH WARNINGS
+Be ware of setting \fBuse_home_env\fP to non-zero for deamons
+which can inherit the environment variables at start and
+are not setting it again when changing the UID/EUID. These
+are daemons, that (so-called) aren't touching users' environment.
+In such cases the results may be wrong.
+    
+The static buffer has a length of a MAXPATHLEN bytes. In case of
+a larger strings the NULL is generated while parsing.
+
+.SH "SEE ALSO"
+.BR home_etc(3),
+.BR get_home_etc(3),
+.BR chdir(2),
+.BR getcwd(3)
+
+.SH LICENSE
+This library is distributed under the terms of LGPL.
+       
+.SH AUTHOR
+Pawel Wilk <siefca@gnu.org>
+There was also a lot of other people, who have contributed to this code
+and/or helped with patching applications. See the AUTHORS and the CONTRIBUTORS files.
+

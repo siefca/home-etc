@@ -1,9 +1,9 @@
 NAME=home-etc
-VERSION=1.0.4
+VERSION=1.0.5
 LIBNAME=libhome_etc.so
 
-DIRS=sh src skel patchwork
-FILES=FILES TODO COPYING AUTHORS DEVEL-NOTES CONTRIBUTORS HOME-ETC.pl.txt README home-etc.spec
+DIRS=sh src skel patchwork doc
+FILES=FILES TODO COPYING AUTHORS CONTRIBUTORS README home-etc.spec
 
 all: lib
 

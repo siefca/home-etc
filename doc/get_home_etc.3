@@ -1,0 +1,82 @@
+.\" Copyright (c) 2003 by Pawe³ Wilk <siefca@gnu.org>
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
+.\" USA.
+.\"
+.TH get_home_etc "3" "PLD Linux/GNU" "December 2003" "HOME-ETC"
+.SH NAME
+get_home_etc \- obtain the location of user configuration directory
+.SH SYNOPSIS
+.nf
+.B #include <home_etc.h>
+.sp
+.BI "const char *get_home_etc(char "use_home_env );
+.fi
+.SH DESCRIPTION
+This function is used to obtain the directory name
+decided by user to store configuration files for the
+applications. It makes the following things:
+.LP
+\- it checks whether the \fBHOME_ETC\fP environment variable is set
+and if it is it trustes it
+.LP
+\- if the HOME_ETC is not set, it tries to obtain user's
+home directory in two ways: via HOME anvironment variable
+(if the \fIuse_home_env\fP was non-zero) and in case of failure
+via \fBgetpwuid(3)\fP
+.LP
+\- having a home directory it tries to open the file called
+.I ~/.home-etc
+.LP
+\- if the file is opened it tries to read the first line
+.LP
+\- if the first line is found and it is a path it trustes it
+.LP
+\- if the path is not absolute it is absolutized using obtained
+home directory pathname
+
+.SH "RETURN VALUE"
+This function returns the pointer to a static buffer containing
+the pathname of a directory or NULL if something went bad and the path
+cannot be obtained.
+
+.SH WARNINGS
+Be ware of setting \fIuse_home_env\fP to non-zero for deamons
+which can inherit the environment variables at start and
+are not setting it again when changing the UID/EUID. These
+are daemons, that (so-called) aren't touching users' environment.
+In such cases the results may be wrong.
+    
+The static buffer has a length of a MAXPATHLEN bytes. In case of
+a larger strings the NULL is generated while parsing.
+
+.SH "SEE ALSO"
+.BR getenv(3),
+.BR getpwnam(3),
+.BR home_etc(3)
+    
+.SH LICENSE
+This library is distributed under the terms of LGPL.
+       
+.SH AUTHOR
+Pawel Wilk <siefca@gnu.org>
+There was also a lot of other people, who have contributed to this code
+and/or helped with patching applications. See the AUTHORS and the CONTRIBUTORS files.
+

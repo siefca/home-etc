@@ -1,9 +1,9 @@
-# $Revision: 1.16 $, $Date: 2003/12/08 16:30:56 $
+# $Revision: 1.17 $, $Date: 2003/12/10 13:16:22 $
 Summary:	HOME-ETC support for PLD Linux
 Summary(pl):	Wsparcie mechanizmu HOME-ETC dla PLD Linux
 Name:		home-etc
-Version:	1.0.4
-Release:	2
+Version:	1.0.5
+Release:	1
 Epoch:		1
 License:	LGPL
 Group:		Base
@@ -92,6 +92,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_libdir}
 install -d $RPM_BUILD_ROOT%{_bindir}
+install -d $RPM_BUILD_ROOT%{_mandir}/man3
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 install -d $RPM_BUILD_ROOT/etc/profile.d
 install -d $RPM_BUILD_ROOT/etc/skel
@@ -104,7 +105,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc FILES README CONTRIBUTORS AUTHORS COPYING TODO HOME-ETC.pl.txt
+%doc README CONTRIBUTORS AUTHORS COPYING doc/HOME-ETC.pl.txt
 %attr(755,root,root) %{_libdir}/lib*.so*
 %attr(755,root,root) %{_libdir}/lib*.la
 %attr(755,root,root) %{_bindir}/*
@@ -113,8 +114,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%doc DEVEL-NOTES
+%doc doc/DEVEL-NOTES AUTHORS CONTRIBUTORS COPYING FILES TODO
 %{_includedir}/*.h
+%{_mandir}/man3/*
 
 %files static
 %defattr(644,root,root,755)
@@ -130,6 +132,11 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: home-etc.spec,v $
+Revision 1.17  2003/12/10 13:16:22  siefca
+- added manual pages
+- documentation section reorganized for devel subpackage
+- version: 1.0.5
+
 Revision 1.16  2003/12/08 16:30:56  siefca
 - added note about absolutizing directory in .home-etc into documentation
 

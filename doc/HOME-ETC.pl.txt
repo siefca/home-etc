@@ -177,9 +177,13 @@
 
 8. Przyk³adowy kod.
 
-    Odpowiedni plik nag³ówkowy z tymi funkcjami znajdziesz w:
+    Odpowiedni plik nag³ówkowy z tymi funkcjami znajdziesz w repozytorium CVS:
     
-			PLD-doc/home-etc/examples/
+			/home-etc/src/home_etc.h
+			
+    Przyk³ady u¿ycia znajdziesz w:
+    
+			/home-etc/src/example*.c
 			
     na cvs.pld-linux.org
 
@@ -193,15 +197,17 @@
     mechanizmu HOME-ETC do dowolnej aplikacji to musisz tylko zainstalowaæ
     u siebie pakiet home-etc-devel, po³±czyæ program z bibliotek± wspó³dzielon±
     w momencie budowania, a w samym kodzie C dopisaæ #include <home_etc.h>
-    
-    Aby przejrzeæ API biblioteki zajrzyj do: /usr/include/home_etc.h
-    
+
+    Aby przejrzeæ API biblioteki zainstaluj pakiet home-etc-devel, a potem
+    zajrzyj do: /usr/include/home_etc.h
+
     Nie zapomnij o dodaniu BuildRequired: home-etc-devel oraz Requires: home-etc
     do speca pakietu, który modyfikujesz.
-    
-    ps.: Mam nadziejê zrobiæ osobne HOWTO dla tworz±cych poprawki, które
+
+    ps:  Mam nadziejê zrobiæ osobne HOWTO dla tworz±cych poprawki, które
          dok³adniej opisa³oby w³±czanie tego w ³atki na konkretnych przyk³adach,
-	 jakby co to bêdzie to w pakiecie home-etc-devel w sekcji dokumentacji
+	 wiêc w razie czego szukajcie w pakiecie home-etc-devel w sekcji dokumentacji
+	 (/usr/share/doc/home-etc-[wersja]).
     
 10. Kontakt.
 
