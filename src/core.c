@@ -18,7 +18,18 @@
 
 inline void zero_last_path_element(char *path)
 {
+    char *p;
     
+    p = strrchr(path, (int) '/');
+    if (p != NULL)
+    {
+	*p = '\0';
+	return;
+    }
+    else	/* no more to cut */
+    {		/* has to use the fs */
+	
+    }
 }
 
 const char *absolutize_path(const char *path, char *ptr)
