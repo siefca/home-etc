@@ -48,4 +48,3 @@ AC_CONFIG_FILES([Makefile
 			 sh/Makefile
 			 skel/Makefile
 			 patchwork/Makefile])
-AC_OUTPUT
