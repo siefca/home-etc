@@ -41,10 +41,12 @@ AC_TYPE_SIZE_T
 dnl Checks for library functions.
 AC_CHECK_FUNCS([bzero endpwent getcwd setenv strrchr strchr memcpy memset])
 
-AC_CONFIG_FILES([Makefile 
+AC_CONFIG_FILES([Makefile
 			 home-etc.spec
 			 src/Makefile
 			 doc/Makefile
 			 sh/Makefile
 			 skel/Makefile
 			 patchwork/Makefile])
+
+AC_OUTPUT

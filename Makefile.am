@@ -1,7 +1,7 @@
 SUBDIRS=sh src skel patchwork doc
 EXTRA_DIST=FILES TODO COPYING AUTHORS CONTRIBUTORS README home-etc.spec
 
-dist-local:
+CONTRIBUTORS:
 	sh ./congen
 
 rpm:
