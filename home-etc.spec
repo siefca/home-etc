@@ -1,4 +1,4 @@
-# $Revision: 1.5 $, $Date: 2003/11/30 12:27:45 $
+# $Revision: 1.6 $, $Date: 2003/11/30 12:28:44 $
 Summary:	HOME-ETC support for PLD Linux
 Summary(pl):	Wsparcie mechanizmu HOME-ETC dla PLD Linux
 Name:		home-etc
@@ -28,7 +28,7 @@ Summary:	Static version of HOME-ETC library
 Summary(pl):	Wersja statyczna biblioteki HOME-ETC
 License:	LGPL
 Group:		Development/Libraries
-Requires:	%{name} = %{epoch}:%{version}
+Requires:	%{name}-devel = %{epoch}:%{version}
 
 %description static
 HOME-ETC is an idea to keep configuration files in a subdirectory
@@ -47,7 +47,6 @@ Summary(pl):	Pliki nag³ówkowe dla mechanizmu HOME-ETC
 License:	LGPL
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}
-Requires:	%{name}-static = %{epoch}:%{version}
 
 %description devel
 HOME-ETC is an idea to keep configuration files in a subdirectory
@@ -126,6 +125,9 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: home-etc.spec,v $
+Revision 1.6  2003/11/30 12:28:44  siefca
+- typo fixed
+
 Revision 1.5  2003/11/30 12:27:45  siefca
 - static subpackage added
 
