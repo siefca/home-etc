@@ -7,6 +7,7 @@
  *
  */
 
+#include <stdio.h>
 #include <sys/param.h>
 #include <sys/types.h>
 #include <errno.h>
@@ -14,20 +15,15 @@
 #include "core.h"
 #include "wrap_fopen.h"
 
-/****************************
- * interface stubs
- */
-
-/* core wrapper */
-
 const char *get_home_etc(char use_home_env)
 {
-    return (get_home_etc_core(char use_home_env));
+    return get_home_etc_core(use_home_env);
 }
 
 /* fopen() wrapper */
 
 FILE *home_etc_fopen(const char *path, const char *mode)
 {
-    return (home_etc_fopen_core(const char *path, const char *mode));
+    return home_etc_fopen_core(path, mode);
 }
+

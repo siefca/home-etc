@@ -7,4 +7,6 @@
  *
  */
 
+#include <stdio.h>
+
 FILE *home_etc_fopen_core(const char *path, const char *mode);

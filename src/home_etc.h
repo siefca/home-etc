@@ -11,6 +11,8 @@
  * interface
  */
 
+#include <stdio.h>
+
 const char *get_home_etc(char use_home_env);
 
 FILE *home_etc_fopen(const char *path, const char *mode);
