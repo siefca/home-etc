@@ -1,4 +1,4 @@
-# $Id: zrobione,v 1.1 2003/12/07 17:06:12 siefca Exp $
+# $Id: zrobione,v 1.2 2003/12/07 18:20:05 siefca Exp $
 # tu dopisujemy spaczowane/przerobione ze wsparciem dla ~/etc/ pakiety
 # format:
 # [login]
@@ -16,7 +16,7 @@
 
 [siefca]
 qmail		X	.qmail*			stara wersja, sztywne ~/etc
-mutt		?	.mutt*
+mutt		S	.mutt*:.Mutt*
 pine		R	.pinerc
 
 [yossa]
