@@ -24,15 +24,7 @@ const char *home_etc_path(const char *pathname);
 
 /* a sweet wrapper */
 
-inline const char *_HE(const char *pathname)
-{
-    const char *p = home_etc_path(pathname);
-    
-    if (p == NULL)
-	return pathname;
-	
-    return p;
-}
+const char *_HE(const char *pathname);
 
 /* a sweetest wrapper */
 

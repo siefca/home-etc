@@ -28,6 +28,18 @@ const char *home_etc_path(const char *pathname)
     return home_etc_path_core(pathname);
 }
 
+/* pathname reconstruction wrapper */
+
+const char *_HE(const char *pathname)
+{
+    const char *p = home_etc_path(pathname);
+    
+    if (p == NULL)
+	return pathname;
+	
+    return p;
+}
+
 /* HOME_ETC location fetcher -- static buf */
 
 const char *get_home_etc_static()
