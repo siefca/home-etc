@@ -19,6 +19,6 @@
 
 const char *obtain_home_dir(char use_home_env);
 const char *get_home_etc_core(char use_home_env);
-const char *home_etc_path_core(const char *path);
+const char *home_etc_path_core(const char *path, char use_home_env);
 
 #endif

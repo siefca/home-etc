@@ -21,18 +21,18 @@ const char *get_home_etc(char use_home_env)
     return get_home_etc_core(use_home_env);
 }
 
-/* pathname reconstructor */
+/* pathname reconstructors */
 
-const char *home_etc_path(const char *pathname)
+const char *home_etc_path(const char *pathname, char use_home_env)
 {
-    return home_etc_path_core(pathname);
+    return home_etc_path_core(pathname, 1);
 }
 
 /* pathname reconstruction wrapper */
 
 const char *_HE(const char *pathname)
 {
-    const char *p = home_etc_path(pathname);
+    const char *p = home_etc_path(pathname, 1);
     
     if (p == NULL)
 	return pathname;

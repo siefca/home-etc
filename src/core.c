@@ -228,7 +228,7 @@ const char *get_home_etc_core(char use_home_env)
 
 /*********************************************************************/
 
-const char *home_etc_path_core(const char *path)
+const char *home_etc_path_core(const char *path, char use_home_env)
 {
     static char dirbuf[MAXPATHLEN];
     char pathbuf[MAXPATHLEN];
@@ -236,8 +236,8 @@ const char *home_etc_path_core(const char *path)
     const char *home_etc_dir, *p;
     size_t s;
 
-    home_etc_dir = get_home_etc_core(1);
-    p = obtain_home_dir(1);
+    home_etc_dir = get_home_etc_core(use_home_env);
+    p = obtain_home_dir(use_home_env);
     if (home_etc_dir == NULL || p == NULL || path == NULL ||
         *path == '\0' || *home_etc_dir == '\0' || *p == '\0')
 	return NULL;
@@ -268,7 +268,6 @@ const char *home_etc_path_core(const char *path)
 
     /* now the p variable contains		*/
     /* the rest of the path, after homedir path	*/
-
     if (   (strlen(home_etc_dir))
          + (strlen(p)) 
 	 + 4 > sizeof(dirbuf)    )

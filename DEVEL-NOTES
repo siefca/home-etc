@@ -2,6 +2,159 @@
 
 Using home_etc in applications being modified.
 
+Interface description.
+
+libhome_etc gives you the stubs, which are described in the
+manual pages. It is recommended to start from the: man 3 home_etc
+
+---
+
+get_home_etc()
+
+NAME
+    get_home_etc - fetch the location of a user-decided
+                   configuration directory
+		       
+SYNOPSIS
+
+    #include <home_etc.h>
+
+    const char *get_home_etc(char use_home_env);
+
+DESCRIPTION
+
+    This function is used to obtain the directory name
+    decided by user to store configuration files for the
+    applications. It makes the following things:
+    
+    * it checks whether the HOME_ETC environment variable is set
+      and if it is it trustes it
+      
+    * if the HOME_ETC is not set, it tries to obtain user's
+      home directory in two ways: HOME anvironment variable
+      (if the use_home_env was non-zero) and in case of failure
+      getpwuid()
+      
+    * having a home directory it tries to read the file called
+      ~/.home-etc
+      
+    * if the file is opened it tries to read the first line
+    
+    * if the first line is found and it is a path it trustes it
+
+RETURN VALUE
+
+    This function returns the pointer to a static buffer containing
+    the pathname of a directory or NULL if something went bad and the path
+    cannot be obtained.
+
+WARNINGS
+
+    Be ware of setting use_home_env to non-zero for deamons
+    which can inherit the environment variables at start and
+    are not setting it again when changing the UID/EUID. These
+    are daemons, that (so-called) aren't touching users' environment.
+    In such cases the results may be wrong.
+    
+    The static buffer has a length of a MAXPATHLEN bytes. In case of
+    longer strings while parsing the NULL is generated.
+
+SEE ALSO
+    
+    getenv(3), getpwnam(3), home_etc(3)
+    
+LICENSE
+    This library is distributed under the terms of LGPL.
+       
+AUTHOR
+    Pawel Wilk <siefca@gnu.org>
+
+    There was also a lot of other people, who contributed to this code. See
+    the AUTHORS and the CONTRIBUTORS files.
+					  
+----
+
+home_etc_path()
+
+NAME
+
+    home_etc_path - pathname reconstructor
+    
+SYNOPSIS
+
+    #include <home_etc.h>
+
+    const char *home_etc_path(const char *pathname, char use_home_env);
+    const char *_HE(const char *pathname);
+
+DESCRIPTION
+
+    This function rewrites the given pathname according
+    to the result of get_home_etc(3). It tries to canonize
+    as much parts of the directories as it is possible in:
+    pathname, (obtained beforre) home directory, and HOME_ETC.
+    
+    Substitution is made for the found string of the user's home directory,
+    which is searched in the pathname. The home-dir part of the string
+    becomes the HOME_ETC value obtained before.
+    
+    The use_home_env is simply passed to the get_home_etc(3).
+    
+    The function iterates using chdir(3) and getcwd(3) to canonize parts
+    of pathnames.
+    
+    _HE is a wrapper for this function, which never returns NULL, since NULL
+    wasn't given as an argument. It calls home_etc_path(3) and in case
+    of failure it simply returns the given pathname. It alwas sets use_home_env
+    to a non-zero.
+
+RETURN VALUE
+
+    This function returns the pointer to a static buffer containing
+    the newly generated pathname or NULL if something went bad.
+    
+    _HE works same way but never returns NULL, since the NULL wasn't
+    given as an argument. 
+
+EXAMPLES
+
+    for:
+
+     HOME set to /home/users/siefca
+     HOME_ETC set to /usr/siefca-configs/
+    
+    the function:
+
+     home_etc_path("/home/users/siefca/.muttrc", 1);
+    
+    will return /usr/siefca-configs/.muttrc
+
+WARNINGS
+
+    Be ware of setting use_home_env to non-zero for deamons
+    which can inherit the environment variables at start and
+    are not setting it again when changing the UID/EUID. These
+    are daemons, that (so-called) aren't touching users' environment.
+    In such cases the results may be wrong. Be ware of using _HE for those.
+    
+    The static buffer has a length of a MAXPATHLEN bytes. In case of
+    longer strings while parsing the NULL is generated.
+
+SEE ALSO
+
+home_etc(3), get_home_etc(3), chdir(3), getcwd(3)
+
+----
+
+/* a sweetest wrapper */
+
+const char *get_home_etc_static();
+
+#define	_HEdir get_home_etc_static()
+
+#endif
+
+
 A few steps which should be done:
 
     * backup original sources directory under other name,

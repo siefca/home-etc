@@ -1,9 +1,9 @@
-# $Revision: 1.14 $, $Date: 2003/12/08 13:11:37 $
+# $Revision: 1.15 $, $Date: 2003/12/08 16:16:24 $
 Summary:	HOME-ETC support for PLD Linux
 Summary(pl):	Wsparcie mechanizmu HOME-ETC dla PLD Linux
 Name:		home-etc
-Version:	1.0.3
-Release:	3
+Version:	1.0.4
+Release:	1
 Epoch:		1
 License:	LGPL
 Group:		Base
@@ -130,6 +130,10 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: home-etc.spec,v $
+Revision 1.15  2003/12/08 16:16:24  siefca
+- interface change
+- devel documentation updated
+
 Revision 1.14  2003/12/08 13:11:37  siefca
 - added DEVEL-NOTES
 
