@@ -1,5 +1,5 @@
 NAME=home-etc
-VERSION=1.0.7
+VERSION=1.0.8
 LIBNAME=libhome_etc.so
 
 DIRS=sh src skel patchwork doc

@@ -155,30 +155,27 @@ And here is part of \fIconfigure.in\fP, which makes a test whether the \fBlibhom
 .nf
 .ne 12
 .ta 8n 16n
-AC_ARG_WITH(home-etc, [  --with-home-etc[=PFX] Use HOME-ETC library ],
-        [
-        if test "$with_home_etc" != "no"
-        then
-          if test "$with_home_etc" != "yes"
-          then
-            LDFLAGS="$LDFLAGS -L$with_home_etc/lib"
-          fi
+AC_DEFINE([ENABLE_HOME_ETC],1,[defined if HOME-ETC library is used])
 
-          saved_LIBS="$LIBS"
+    ...
 
-          AC_CHECK_LIB(home_etc, get_home_etc_static,,
-            AC_MSG_ERROR([could not find libhome_etc]),)
-	    
-	  AC_CHECK_HEADERS(home_etc.h)
-
-          MUTTLIBS="$MUTTLIBS -lhome_etc"
-          LIBS="$saved_LIBS"
-          AC_DEFINE(USE_HOME_ETC,1,
-                  [ Define if want to use the HOME-ETC library. ])
-          need_home_etc=yes
-        fi
-        ])
-AM_CONDITIONAL(USE_HOME_ETC, test x$need_home_etc = xyes)
+AC_ARG_WITH(home-etc,
+[  --with-home-etc  compile with libhome_etc],
+ENABLE_HOME_ETC=$enableval, ENABLE_HOME_ETC=no)
+if test "${ENABLE_HOME_ETC}." != "yes."; then
+	AM_CONDITIONAL(ENABLE_HOME_ETC, false)
+else
+	if test "$with_home_etc" != "yes"
+	then
+	    LDFLAGS="$LDFLAGS -L$with_home_etc/lib"
+	fi
+	
+	AC_CHECK_HEADERS(home_etc.h)
+	AC_CHECK_LIB(home_etc, get_home_etc_static,,AC_MSG_ERROR(["libhome_etc not found"]))
+	LIBS="$LIBS -lhome_etc"
+	AM_CONDITIONAL(ENABLE_HOME_ETC, true)
+	AC_DEFINE([ENABLE_HOME_ETC],1,[define whether to use the HOME-ETC library])
+fi
 
 .ta
 .fi
