@@ -1,29 +1,29 @@
 NAME=home_etc
-VERSION=0.1
+VERSION=1.0.1
 LIBNAME=libhome_etc.so
 
-DIRS=doc sh src skel
-FILES=COPYING AUTHORS home_etc.spec
+DIRS=sh src skel
+FILES=TODO COPYING AUTHORS HOME-ETC.txt README home_etc.spec
 
-all: lib dist rpm
+all: lib
 
 lib:
 	cd src && make
 
 dist:
 	$(MAKE) clean
-	$(MAKE) lib
 	mkdir $(NAME)-$(VERSION)
 	cp -r $(FILES) $(DIRS) Makefile $(NAME)-$(VERSION)
 	tar czf $(NAME)-$(VERSION).tar.gz $(NAME)-$(VERSION)
+	$(MAKE) distclean
 
 distclean:
 	$(MAKE) clean
-	rm -rf $(NAME)-$(VERSION) 
+	rm -rf $(NAME)-$(VERSION)
 
 rpm:
 	$(MAKE) dist
-	
+	rpmbuild -ta --clean $(NAME)-$(VERSION).tar.gz
 
 install:
 	cd src && make install

@@ -1,0 +1,220 @@
+
+
+	    Podkatalog 'etc' w katalogu domowym u¿ytkownika 
+			    
+					    implementacja
+					    
+    
+
+  1.	~/etc
+  1.1	  Ja chcê ~/.etc
+  2.	Co powinno siê znale¼æ w ~/etc/ ?
+  3.	Wyj±tki.
+  4.	Zgodno¶æ.
+  4.1     ¦cie¿ki w plikach konfiguracyjnych.
+  4.2	  Programy niezale¿ne od ¶rodowiska u¿ytkownika.
+  5.	Algorytm uzyskiwania HOME_ETC w ³atkach dla programów.
+  6.	Inne konfigurowalne katalogi.
+  7.	Prawa.
+  8.	Przyk³adowy kod.
+  9.	Biblioteka wspó³dzielona.
+  10.	Kontakt.
+  11.	Autorzy.
+
+1. ~/etc/
+
+    Katalog ~/etc/ zaczyna byæ coraz bardziej potrzebny. W miarê jak powiêksza
+    siê ilo¶æ zorientowanych na u¿ytkownika aplikacji, w tym przede wszystkim
+    aplikacji graficznych, narzêdzi DTP i zorientowanych profilowo mened¿erów
+    okien, powiêksza siê ilo¶æ informacji konfiguracyjnych, które trzeba gdzie¶
+    przechowywaæ. W katalogach domowych u¿ytkowników zaczyna w niebezpiecznym 
+    tempie narastaæ ilo¶æ plików z kropk±! Katalog domowy osoby u¿ywaj±cej 
+    wielu ró¿norodnych aplikacji wygl±daæ zaczyna jak skóra cz³owieka, który 
+    dosta³ wysypki. Biedny katalog domowy...
+    
+    Ale na tym nie koniec. Niektóre aplikacje, jak np. 'qmail-local' z pakietu
+    'qmail', pozwalaj± aby ich zachowanie by³o kontrolowane przez atrybuty
+    katalogu zawieraj±cego pliki konfiguracyjne u¿ytkownika (czyli de facto jego 
+    katalogu domowego). Co stanie siê, je¶li dwa takie programy bêd± w danej
+    chwili wymaga³y zmiany tych samych atrybutów katalogu domowego??
+
+1.1 Ja chcê ~/.etc
+
+    Niektórzy woleliby trzymaæ pliki konfiguracyjne w ~/.etc ; jeszcze inni
+    w ~/conf... Rad± na to jest takie przystosowanie programów, aby korzysta³y
+    ze zmiennej ¶rodowiskowej $HOME_ETC mówi±cej o lokalizacji ww. plików.
+    Dla uproszczenia w dalszej czê¶ci dokumentu bêdê nazywa³ ten katalog
+    po prostu ~/etc, nale¿y jednak mieæ na uwadze, ¿e chodzi tu o katalog
+    z plikami konfiguracyjnymi, którego nazwa przechowywana jest w³a¶nie w
+    tej zmiennej ¶rodowiskowej.
+    
+    $HOME_ETC ma postaæ ³añcucha bêd±cego nazw± katalogu, w którym przechowywane s±
+    pliki konfiguracyne. Umieszczenie w tej zmiennej czego¶ ponad to ma
+    prawo powodowaæ nieprzewidziane zachowanie programu. W $HOME_ETC jest dopuszczalne
+    stosowanie tylko BEZWZGLÊDNEJ NAZWY ¦CIE¯KOWEJ KATALOGU.
+
+    Przyk³ad:
+
+     HOME_ETC=/mojeetc
+     
+     co oznacza, ¿e pliki konfiguracyjne maj± byæ przechowywane w /mojeetc/
+
+     HOME_ETC=/home/users/mojlogin/etc     
+    
+     co oznacza, ¿e pliki konfiguracyjne maj± byæ przechowywane
+     w /home/users/mojlogin/etc     
+    
+    $HOME_ETC powinna byæ zdefiniowana w globalnym pliku konfiguracyjnym
+    danej pow³oki lub w szablonie plików konfiguracyjnych pow³oki (np. w
+    którym¶ z plików z katalogu /etc/skel/).
+    
+2. Co powinno siê znale¼æ w ~/etc/ ?
+
+    W katalogu ~/etc/ powinny znale¼æ siê wszystkie pliki konfiguracyjne
+    aplikacji, które tworz± je dla poszczególnych u¿ytkowników, a które
+    wcze¶niej przechowywane by³y w ~/.nazwapliku
+    
+    Aplikacje, które wymagaj± istnienia wiêcej ni¿ jednego pliku 
+    konfiguracyjnego powinny posiadaæ swoje w³asne podkatalogi wewn±trz ~/etc/
+    Nazwy plików powinny zaczynaæ siê kropk±.
+    
+    PRZYK£ADY:
+    
+    ~/etc/pinerc
+    ~/etc/ssh/
+    ~/etc/qmail/
+    ~/etc/qmail/qmail-default
+    ~/etc/pinforc
+    
+3. Wyj±tki.
+
+    W ~/etc/ nie musz± (nie powinny) byæ umieszczone nastêpuj±ce pliki:
+    
+    .profile
+    .login
+    .logout
+    .bashrc
+    .bash_profile
+    .bash_history
+    .bash_login
+    .bash_logout
+    .inputrc
+    .etc-dir
+    
+    i inne pliki konfiguracyjne pow³ok.
+    
+4. Zgodno¶æ.
+
+    Programy, które chc± wprowadzaæ proponowane udogodnienie powinny zachowaæ
+    zgodno¶æ w dó³. To znaczy, ¿e je¶li nie uda siê ustaliæ alternetywnej
+    lokalizacji pliku to korzystamy z lokalizacji domy¶lnie wymaganej przez
+    aplikacjê.
+    
+4.1. ¦cie¿ki w plikach konfiguracyjnych.
+
+    Ta sprawa wymaga dyskusji. Na pierwszy rzut oka wydaje siê naturalnym
+    traktowaæ ./ wystêpuj±ce w pliku umieszczonym w ~/etc/ jak zwyczajn±
+    ¶cie¿kê wzglêdn± do katalogu bie¿±cego procesu. Lecz o wiele ³atwiej by³oby
+    wprowadzaæ zmiany, gdyby¶my za³o¿yli, ¿e ./ wystêpuj±ce gdzie¶ w ~/etc/plik
+    zawsze odnosi siê do katalogu domowego.
+    
+    Przyk³adem mo¿e byæ tu znów 'qmail-local', dla którego kropka na pocz±tku
+    nazwy miejsca, do którego ma dotrzeæ przesy³ka jest informacj±, ¿e 
+    wiadomo¶æ nale¿y zapisaæ do pliku (katalogu) umiejscowionego wzglêdem
+    katalogu domowego. Owszem, mo¿na to omin±æ podaj±c np.: ../../Mailbox
+    ale wymaga to zwiêkszonego nak³adu pracy na modyfikacjê ¼róde³ programów,
+    które zachowuj± siê w podobny sposób, wprowadza tak¿e ró¿nice w zawarto¶ci
+    plików umiejscowionych bezpo¶rednio w ~ a tych z ~/etc/[dir/]. Dlatego
+    moj± propozycj± jest by traktowaæ ./ wystêpuj±ce w ~/etc/[dir/] jako
+    katalog domowy. Pozwoli to zautomatyzowaæ proces wprowadzania w ¿ycie
+    nowego sposobu rozmieszczania plików konfiguracyjnych.
+
+4.2 Programy niezale¿ne od ¶rodowiska u¿ytkownika.
+    
+    Wprowadzaj±c ~/etc nie da siê unikn±æ sytuacji, w ktorych przerobiæ
+    trzeba program nie maj±cy styczno¶ci ze zmiennymi ¶rodowiskowymi 
+    u¿ytkownika. Program taki to np. lokalny dostarczyciel poczty,
+    którego jedynym dzia³aniem jest uruchomiæ siê na prawach danego u¿ytkownika
+    i korzystaj±c z plików konfiguracyjnch (np. ustawieñ filtracji czy
+    lokalnego trasowania poczty) obs³u¿yæ przesy³kê. Musi on w jaki¶ sposób
+    dowiedzieæ siê o katalogu konfiguracyjnym. Wygodnym rozwi±zaniem wydaje siê
+    przekazanie informacji o zawarto¶ci $HOME_ETC jako opcji podanej przy
+    wywo³aniu. Dlatego w³a¶nie, w przypadku niektórych aplikacji informacjê 
+    o miejscu na pliki konfiguracyjne musi wprowadziæ administrator systemu, 
+    a odpowiednio przystosowana aplikacja powinna daæ mu tak± mo¿liwo¶æ.
+
+    W tym miejscu widzimy, ¿e nigdy nie uda siê uzyskaæ pe³nej elastyczno¶ci
+    w korzystaniu z katalogu zawieraj±cego pliki konfiguracyjne. :(  
+    Mo¿emy teraz stwierdziæ, ¿e $HOME_ETC ³atwiej u¿ytkownikom narzuciæ,
+    np. w globalnym profilu pow³oki.
+
+5. Algorytm uzyskiwania HOME_ETC w ³atkach dla programów.
+
+    1	Czy istnieje zmienna ¶rodowiskowa $HOME_ETC ?
+    
+	TAK:  przejd¼ do (3)
+	NIE:  przejd¼ do (2)
+    
+    2	Czy istnieje plik o nazwie .etc-dir i istnieje katalog o nazwie
+        podanej w jego pierwszej linii tego pliku ?
+    
+	TAK:  ustaw HOME_ETC i przejd¼ do (3)
+	NIE:  u¿yj starej metody korzystania z plików konfiguracyjnych
+    
+    3	U¿ywaj pliku konfiguracji z ~/$HOME_ETC/
+
+6. Inne konfigurowalne katalogi.
+
+    Poza plikami konfiguracyjnymi w katalogu domowym warto te¿ 
+    uporz±dkowaæ sprawê plików i podkatalogów z danymi.
+    Zmienna ¶rodowiskowa okre¶laj±ca katalog to $DATA_DIR i
+    podlega ona takim samym prawom jak $HOME_ETC.
+
+7. Prawa.
+
+    0700 dla ~/etc/ i 0700 dla plików i katalogów wewn±trz (chyba, ¿e 
+    wymagaj± inaczej)
+
+8. Przyk³adowy kod.
+
+    Odpowiedni plik nag³ówkowy z tymi funkcjami znajdziesz w:
+    
+			PLD-doc/home-etc/examples/
+			
+    na cvs.pld-linux.org
+
+9. Biblioteka wspó³dzielona.
+
+    ¯eby nie trzeba by³o robiæ du¿ych ³atek, które powielaj± te same
+    dzia³ania i w których mo¿na siê pomyliæ napisa³em krótk± bibliotekê
+    wspó³dzielon±, któr± odnale¼æ mo¿na w CVS w module home-etc, a tak¿e
+    w pakiecie RPM o nazwie home_etc. Biblioteka ma naprawdê prosty
+    interfejs programisty i je¶li chcesz jej u¿yæ dodaj±c funkcjonalno¶æ
+    mechanizmu HOME-ETC do dowolnej aplikacji to musisz tylko zainstalowaæ
+    u siebie pakiet home_etc-devel, po³±czyæ program z bibliotek± wspó³dzielon±
+    w momencie budowania, a w samym kodzie C dopisaæ #include <home_etc.h>
+    
+    Aby przejrzeæ API biblioteki zajrzyj do: /usr/include/home_etc.h
+    
+    Nie zapomnij o dodaniu BuildRequired: home_etc-devel oraz Requires: home_etc
+    do speca pakietu, który modyfikujesz.
+    
+    ps.: Mam nadziejê zrobiæ osobne HOWTO dla tworz±cych poprawki, które
+         dok³adniej opisa³oby w³±czanie tego w ³atki na konkretnych przyk³adach,
+	 jakby co to bêdzie to w pakiecie home_etc-devel w sekcji dokumentacji
+    
+10. Kontakt.
+
+    Je¶li chcesz wyraziæ sw± opiniê, czy wymieniæ pogl±dy dotycz±ce 
+    powy¿szego tematu, wy¶lij pust± wiadomo¶æ na adres:
+    
+			pld-devel-pl@lists.pld-linux.org
+
+    aby do³±czyæ do listy dyskusyjnej osób rozwijaj±cych PLD.
+
+11. Autorzy.
+
+Autorem tego dokumentu jest		Pawe³ Wilk <siefca@pld-linux.org>
+Pomys³ na osobny katalog z danymi:	Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
+Pomys³ na zmienn± ¶rodowiskow±:		Adam Ryba <pooh@gate.pl>
+Poprawki/aktualizacja:			Tomasz Orzechowski <orzech@pld-linux.org>

@@ -1,4 +1,4 @@
-# $Revision: 1.2 $, $Date: 2003/11/26 18:26:39 $
+# $Revision: 1.3 $, $Date: 2003/11/26 19:15:43 $
 Summary:	HOME-ETC support for PLD Linux
 Summary(pl):	Wsparcie mechanizmu HOME-ETC dla PLD Linux
 Name:		home_etc
@@ -7,7 +7,7 @@ Release:	1
 Epoch:		1
 License:	GPL
 Group:		Base
-Source0:	ftp://ftp.pld-linux.org/software/utmp-jeber/%{name}-%{version}.tar.gz
+Source0:	ftp://ftp.pld-linux.org/people/siefca/distfiles/%{name}-%{version}.tar.gz
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -22,13 +22,11 @@ w jego katalogu domowym. Pakiet ten zapewnia wsparcie dla tego
 mechanizmu.
 
 %package devel
-Summary:	cron script for UTMP Jeber
-Summary(pl):	Skrypt cyklicznego wykonywania dla UTMP Jeber
+Summary:	Header files for HOME-ETC
+Summary(pl):	Pliki nag³ówkowe dla mechanizmu HOME-ETC
 License:	GPL
-Group:		Applications/System
+Group:		Development/Libraries
 Requires:	%{epoch}:%{name} = %{version}
-Requires:	crontabs
-Requires:	crondaemon
 Requires:	syslogdaemon
 
 %description devel
@@ -43,23 +41,26 @@ w jego katalogu domowym. Pakiet ten zawiera pliki nag³ówkowe
 potrzebne do budowania aplikacji zgodnych z HOME-ETC.
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q
 
 %build
-%{__make}
+%{__make} \
+	CC="%{__cc}" \
+	CFLAGS="%{rpmcflags} \$(WARN)"
+
 
 %install
 rm -rf $RPM_BUILD_ROOT
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_libdir}
-install -d /etc/profile.d
+install -d $RPM_BUILD_ROOT/etc/profile.d
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc README AUTHORS COPYING
+%doc README AUTHORS COPYING TODO
 %attr(755,root,root) %{_libdir}/lib*.so
 %attr(755,root,root) /etc/profile.d/home-etc.*sh
 
@@ -73,6 +74,11 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: home_etc.spec,v $
+Revision 1.3  2003/11/26 19:15:43  siefca
+- documentation updated
+- spec updated
+- Makefiles fixed
+
 Revision 1.2  2003/11/26 18:26:39  siefca
 - updates
 
