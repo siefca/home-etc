@@ -75,7 +75,7 @@
     wcze¶niej przechowywane by³y w ~/.nazwapliku
     
     Aplikacje, które wymagaj± istnienia wiêcej ni¿ jednego pliku 
-    konfiguracyjnego powinny posiadaæ swoje w³asne podkatalogi wewn±trz ~/etc/
+    konfiguracyjnego powinny posiadaæ swoje w³asne podkatalogi wewn±trz HOME_ETC
     Nazwy plików powinny zaczynaæ siê kropk±.
     
     PRZYK£ADY:
