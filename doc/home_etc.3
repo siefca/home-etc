@@ -1,0 +1,47 @@
+.\" Copyright (c) 2003 by Pawe³ Wilk <siefca@gnu.org>
+.\"
+.\" Permission is granted to copy, distribute and/or modify this document
+.\" under the terms of the GNU Free Documentation License, Version 1.2
+.\" or any later version published by the Free Software Foundation;
+.\" with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+.\" A copy of the license is included in the section entitled "GNU
+.\" Free Documentation License"; if it's not, contact Free Software Foundation, Inc.
+.\" 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA to obtain one.
+.\"
+.TH home_etc "3" "PLD Linux/GNU" "December 2003" "HOME-ETC"
+.SH NAME
+libhome_etc \- allow user to keep its configuration files in an non-standard location
+.SH DESCRIPTION
+HOME-ETC is an idea to keep configuration files in a subdirectory
+specified by user, instead of its home directory. The reason was I don't
+like a rash, and my home directory has started looking like that.
+
+The idea has arised on the occasion of developing
+PLD Linux/GNU distribution, where it is developed till now. Many
+applications need to be patched, and the \fBHOME-ETC\fP library
+is a helper to not write the same thing more than once.
+
+\fBHOME_ETC\fP is a pathname container. It may be obtained in two ways:
+using the environment variable of the same name, or using a file inside
+user's home directory. The filename is \fI.home_etc\fP. The second method
+must be provided because of applications, which cannot touch user's environment
+(MTAs, identd, and other daemons). However, in PLD we're setting things up
+by invoking \fI/etc/profile.d/home-etc.?sh\fP scripts, which are setting the correct
+environment variable according to information found in the file.
+
+You can find more detailed description in the related manual pages.
+.SH "SEE ALSO"
+.BR home_etc_path(3),
+.BR home_etc_path_static(3),
+.BR get_home_etc(3),
+.BR home_etc_reset(3)
+    
+.SH LICENSE
+The HOME-ETC library is distributed under the terms of GNU LGPL.
+This documentation is distributed under the terms of GNU FDL.
+       
+.SH AUTHOR
+Pawel Wilk <siefca@gnu.org>
+There was also a lot of other people, who have contributed to this code
+and/or helped with patching applications. See the AUTHORS and the CONTRIBUTORS files.
+

@@ -60,12 +60,12 @@ of failure it simply returns the given pathname. It always sets \fIuse_env\fP
 to a non-zero.
 
 \fB_HEndir\fP is a macro for this function, which never returns NULL, since NULL
-wasn't given as an argument. It calls \fBhome_etc_path_static(3)\fP and in case
+wasn't given as an argument. It calls \fBhome_etc_path(3)\fP and in case
 of failure it simply returns the given pathname. It always sets \fIuse_env\fP
 to zero.
 
 \fB___HEdir\fP is a macro for this function, which never returns NULL, since NULL
-wasn't given as an argument. It calls \fBhome_etc_path_static(3)\fP and in case
+wasn't given as an argument. It calls \fBhome_etc_path(3)\fP and in case
 of failure it simply returns the given pathname. It doesn't uses the environment
 variables (\fBHOME\fP and \fBHOME_ETC\fP) if the \fB_HE_DAEMON\fP was defined
 before including the header file.
@@ -90,9 +90,8 @@ a larger strings the NULL is generated while parsing.
 .BR getpwnam(3),
 .BR home_etc(3),
 .BR home_etc_path(3),
-.BR home_etc_path_static(3),
 .BR home_etc_reset(3)
-    
+
 .SH LICENSE
 The HOME-ETC library is distributed under the terms of GNU LGPL.
 This documentation is distributed under the terms of GNU FDL.
