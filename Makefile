@@ -3,7 +3,7 @@ VERSION=1.0.3
 LIBNAME=libhome_etc.so
 
 DIRS=sh src skel patchwork
-FILES=FILES TODO COPYING AUTHORS CONTRIBUTORS HOME-ETC.txt README home-etc.spec
+FILES=FILES TODO COPYING AUTHORS CONTRIBUTORS HOME-ETC.pl.txt README home-etc.spec
 
 all: lib
 

@@ -1,9 +1,9 @@
-# $Revision: 1.11 $, $Date: 2003/12/07 18:18:18 $
+# $Revision: 1.12 $, $Date: 2003/12/08 12:11:06 $
 Summary:	HOME-ETC support for PLD Linux
 Summary(pl):	Wsparcie mechanizmu HOME-ETC dla PLD Linux
 Name:		home-etc
 Version:	1.0.3
-Release:	2
+Release:	3
 Epoch:		1
 License:	LGPL
 Group:		Base
@@ -104,7 +104,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc FILES README CONTRIBUTORS AUTHORS COPYING TODO HOME-ETC.txt
+%doc FILES README CONTRIBUTORS AUTHORS COPYING TODO HOME-ETC.pl.txt
 %attr(755,root,root) %{_libdir}/lib*.so*
 %attr(755,root,root) %{_libdir}/lib*.la
 %attr(755,root,root) %{_bindir}/*
@@ -129,6 +129,9 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: home-etc.spec,v $
+Revision 1.12  2003/12/08 12:11:06  siefca
+- documentation name change
+
 Revision 1.11  2003/12/07 18:18:18  siefca
 - bug fixed in migration script
 
