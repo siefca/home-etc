@@ -188,20 +188,20 @@
     ¯eby nie trzeba by³o robiæ du¿ych ³atek, które powielaj± te same
     dzia³ania i w których mo¿na siê pomyliæ napisa³em krótk± bibliotekê
     wspó³dzielon±, któr± odnale¼æ mo¿na w CVS w module home-etc, a tak¿e
-    w pakiecie RPM o nazwie home_etc. Biblioteka ma naprawdê prosty
+    w pakiecie RPM o nazwie home-etc. Biblioteka ma naprawdê prosty
     interfejs programisty i je¶li chcesz jej u¿yæ dodaj±c funkcjonalno¶æ
     mechanizmu HOME-ETC do dowolnej aplikacji to musisz tylko zainstalowaæ
-    u siebie pakiet home_etc-devel, po³±czyæ program z bibliotek± wspó³dzielon±
+    u siebie pakiet home-etc-devel, po³±czyæ program z bibliotek± wspó³dzielon±
     w momencie budowania, a w samym kodzie C dopisaæ #include <home_etc.h>
     
     Aby przejrzeæ API biblioteki zajrzyj do: /usr/include/home_etc.h
     
-    Nie zapomnij o dodaniu BuildRequired: home_etc-devel oraz Requires: home_etc
+    Nie zapomnij o dodaniu BuildRequired: home-etc-devel oraz Requires: home-etc
     do speca pakietu, który modyfikujesz.
     
     ps.: Mam nadziejê zrobiæ osobne HOWTO dla tworz±cych poprawki, które
          dok³adniej opisa³oby w³±czanie tego w ³atki na konkretnych przyk³adach,
-	 jakby co to bêdzie to w pakiecie home_etc-devel w sekcji dokumentacji
+	 jakby co to bêdzie to w pakiecie home-etc-devel w sekcji dokumentacji
     
 10. Kontakt.
 
