@@ -8,7 +8,7 @@
 # or later for copying conditions.  There is NO warranty.
 #
 
-REQ_PACKAGE="pam"
+REQ_PACKAGE="home-etc"
 
 echo "home-etc - migrate your dotfiles! v1.0.1 (LGPL)"
 echo
