@@ -40,7 +40,8 @@ publish:
 	$(MAKE) dist
 	scp $(NAME)-$(VERSION).tar.gz siefca@kernel.pl:~/ftp-pld/distfiles
 	ssh siefca@kernel.pl 'chmod a+r ~/ftp-pld/distfiles/*'
-	mv -f ../SPECS/$(NAME).spec ../SPECS/$(NAME).spec.bak
+	test -f ../SPECS/$(NAME).spec && mv -f ../SPECS/$(NAME).spec ../SPECS/$(NAME).spec.bak
+	cd ../SPECS && cvs up $(NAME).spec
 	cp -f ./$(NAME).spec ../SPECS/$(NAME).spec
 	rm -f ../SOURCES/$(NAME)-$(VERSION).tar.gz
 	cd ../SPECS && ./builder -5 $(NAME).spec

@@ -7,7 +7,7 @@
 dlname='libhome_etc.so.1'
 
 # Names of this library.
-library_names='libhome_etc.so.1.0.6 libhome_etc.so.1 libhome_etc.so'
+library_names='libhome_etc.so.1.0.7 libhome_etc.so.1 libhome_etc.so'
 
 # The name of the static archive.
 old_library='libhome_etc.a'
