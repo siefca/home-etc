@@ -1,4 +1,4 @@
-# $Revision: 1.1 $, $Date: 2003/11/26 18:10:58 $
+# $Revision: 1.2 $, $Date: 2003/11/26 18:26:39 $
 Summary:	HOME-ETC support for PLD Linux
 Summary(pl):	Wsparcie mechanizmu HOME-ETC dla PLD Linux
 Name:		home_etc
@@ -51,19 +51,21 @@ potrzebne do budowania aplikacji zgodnych z HOME-ETC.
 %install
 rm -rf $RPM_BUILD_ROOT
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_bindir}
+install -d $RPM_BUILD_ROOT%{_libdir}
+install -d /etc/profile.d
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc README README.polish ChangeLog NEWS AUTHORS KOPIOWANIE COPYING
-%attr(755,root,root) %{_bindir}/*
+%doc README AUTHORS COPYING
+%attr(755,root,root) %{_libdir}/lib*.so
+%attr(755,root,root) /etc/profile.d/home-etc.*sh
 
-%files cron
+%files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) /etc/cron.hourly/%{name}
+%{_includedir}/*.h
 
 %define date	%(echo `LC_ALL="C" date +"%a %b %d %Y"`)
 %changelog
@@ -71,7 +73,10 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: home_etc.spec,v $
-Revision 1.1  2003/11/26 18:10:58  siefca
-Initial revision
+Revision 1.2  2003/11/26 18:26:39  siefca
+- updates
+
+Revision 1.1.1.1  2003/11/26 18:10:58  siefca
+- initial revision
 
 
