@@ -4,4 +4,4 @@ all:
 
 install:
 	install -d $(DESTDIR)/etc/skel
-	install -m755 home-etc.*sh $(DESTDIR)/etc/profile.d
+	install -m755 .home_etc $(DESTDIR)/etc/skel
