@@ -27,7 +27,7 @@ rpm:
 
 install:
 	for i in $(DIRS); do \
-	cd $$i && make install; \
+	cd $$i && make install NAME=$(NAME) VERSION=$(VERSION); \
 	cd -; \
 	done;
 

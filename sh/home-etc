@@ -93,9 +93,6 @@ else
     userpm=yes
 fi
 
-echo "titi:"
-cat $TMPFILES
-
 rm -f $TMPFILE $TMPFILED	
 echo "$SHORTNAME: moving files.."
 cat $TMPFILES  | while read l

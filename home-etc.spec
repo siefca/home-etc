@@ -1,4 +1,4 @@
-# $Revision: 1.3 $, $Date: 2003/11/28 17:54:10 $
+# $Revision: 1.4 $, $Date: 2003/11/28 18:05:25 $
 Summary:	HOME-ETC support for PLD Linux
 Summary(pl):	Wsparcie mechanizmu HOME-ETC dla PLD Linux
 Name:		home-etc
@@ -94,7 +94,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files examples
 %defattr(644,root,root,755)
-%{_examplesdir}/%{name}-%{version}
+%{_examplesdir}/%{name}-%{version}/*
 
 %define date	%(echo `LC_ALL="C" date +"%a %b %d %Y"`)
 %changelog
@@ -102,6 +102,10 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: home-etc.spec,v $
+Revision 1.4  2003/11/28 18:05:25  siefca
+- debugging removed from script
+- Makefile fixes
+
 Revision 1.3  2003/11/28 17:54:10  siefca
 - examples subpackage added
 - removed debugging switches from Makefile

@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.9 2003/11/28 17:54:11 siefca Exp $
+# $Id: Makefile,v 1.10 2003/11/28 18:05:27 siefca Exp $
 
 CC=gcc
 CFLAGS=-fPIC -O2 -Wall -Werror -pedantic
@@ -13,7 +13,7 @@ $(OBJECTS): $(OBJECTS:.o=.c)
 	$(CC) $(CFLAGS) $(RPMCFLAGS) -o $@ -c $<
 
 lib%.so: %.o
-	ld $(LDFLAGS) -o $@ $<
+	ld $(LDFLAGS) -o $@ $< $(OBJECTS)
 
 test: core.c test.c
 	$(CC) $(CFLAGS) core.c test.c -o test
@@ -24,7 +24,7 @@ clean:
 install:
 	install -d $(DESTDIR)/usr/lib
 	install -d $(DESTDIR)/usr/include
-	install -d $(DESTDIR)/usr/src/examples
+	install -d $(DESTDIR)/usr/src/examples/$(NAME)-$(VERSION)
 	install -s -m755 $(OUT) $(DESTDIR)/usr/lib
 	install -m644 home_etc.h $(DESTDIR)/usr/include/home_etc.h
 	install -m644 example.c $(DESTDIR)/usr/src/examples/$(NAME)-$(VERSION)/example.c
