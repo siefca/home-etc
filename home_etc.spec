@@ -1,4 +1,4 @@
-# $Revision: 1.3 $, $Date: 2003/11/26 19:15:43 $
+# $Revision: 1.4 $, $Date: 2003/11/26 19:18:34 $
 Summary:	HOME-ETC support for PLD Linux
 Summary(pl):	Wsparcie mechanizmu HOME-ETC dla PLD Linux
 Name:		home_etc
@@ -26,8 +26,7 @@ Summary:	Header files for HOME-ETC
 Summary(pl):	Pliki nag³ówkowe dla mechanizmu HOME-ETC
 License:	GPL
 Group:		Development/Libraries
-Requires:	%{epoch}:%{name} = %{version}
-Requires:	syslogdaemon
+Requires:	%{name} = %{epoch}:%{version}
 
 %description devel
 HOME-ETC is an idea to keep configuration files in a subdirectory
@@ -74,6 +73,10 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: home_etc.spec,v $
+Revision 1.4  2003/11/26 19:18:34  siefca
+- epoch in the right place
+- added todo about libtool and automake
+
 Revision 1.3  2003/11/26 19:15:43  siefca
 - documentation updated
 - spec updated
