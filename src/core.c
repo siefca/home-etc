@@ -63,7 +63,9 @@ const char *compare_paths(const char *a, const char *b)
 
     if (*p != '\0' && *p != '/')
 	return NULL; /* strange, e.g.: /home/users/johnsomercfile */
-    p++;
+	
+    if (*p != '\0')
+	p++;
 
     return p;
 }
@@ -174,8 +176,7 @@ const char *home_etc_path_core(const char *path)
     if (home_dir == NULL || *home_dir == '\0')
 	return NULL;
 
-    /* now, get the absolute path of the given directory 	*/
-
+    /* now, get the absolute path of the given directory */
     d = strdup(dirname(pathbuf));
     bzero(pathbuf, sizeof(pathbuf));
     strncpy(pathbuf, path, sizeof(pathbuf));
@@ -192,15 +193,18 @@ const char *home_etc_path_core(const char *path)
 	return NULL;
     }
 
-    /* ding dogn! exception */
-    /* if we are in home then we allow empty dirpart of a path */
+    /* ding dong! exception */
+    /* if we are in home then we can allow empty dirpart of a path */
     /* we are also constructing everything here if te path was not absolute */
-    if (d == NULL || *d == '\0' || *d != '/')
-    /**d == '.' && *(d+1) == '\0'))*/
+    if ((d != NULL && *d != '/') || d == NULL)
     {
 	if (!strcmp(dirbuf, home_dir))
 	{
-	    if ((strlen(home_etc_dir)) + (strlen(f)) + 2 > sizeof(dirbuf))
+	    if (  (strlen(home_etc_dir))
+	        + (strlen(f))
+		+ (d ? strlen(d) : 0)
+		+ 4 > sizeof(dirbuf)
+	       )
 		{
 		    free(d); free(f);
     		    return NULL; /* pathname too long */
@@ -208,7 +212,13 @@ const char *home_etc_path_core(const char *path)
 		bzero(dirbuf, sizeof(dirbuf));
 		strcpy(dirbuf, home_etc_dir);	/* HOME_ETC		*/
 		strcat(dirbuf, "/");		/* slash 		*/
+		if (d != NULL && *d != '\0' && !(*d == '.' && *(d+1) == '\0'))
+		{
+			strcat(dirbuf, d);	/* dirname		*/
+			strcat(dirbuf, "/");	/* slash 		*/
+		}
 		strcat(dirbuf, f);		/* filename		*/
+		if (wasdir) strcat(dirbuf, "/");
 	    return dirbuf;
 	}
 	else
@@ -229,7 +239,8 @@ const char *home_etc_path_core(const char *path)
 	/* path in hope it will be useful, whithout  	*/
 	/* resolving it using system calls..	 	*/
 	strncpy(buf, d, sizeof(buf));
-	/* todo: recursive from-front resolving in this case */
+	/* todo: recursive from-front resolving in this case 	*/
+	/*	 probably slow, but gives us a total effect	*/
     }
     else
     {

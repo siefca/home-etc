@@ -9,7 +9,8 @@ int main (int argc, char *argv[])
     const char *a[] = { "aaaa/.muttrc", ".muttrc", "aaa/bbb/ccc/", "aaa/bbb/",
 			"/home/users/siefca/.muttrc", "/home/users/siefca/.muttrc/xxx",
 			"/home/users/siefca/.a", "/home/../home/users/siefca/hmm",
-			"/home/../home/users/siefca/hmm/", "/home/users/siefca/.muttrc/"
+			"/home/../home/users/siefca/hmm/", "/home/users/siefca/.muttrc/",
+			"tmp/.muttrc", "tmp/.muttrc/"
 		      };
     
     printf("\nHOME_ETC:\t%s\n\n", get_home_etc_core(1));
