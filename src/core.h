@@ -7,11 +7,12 @@
  *
  */
 
-/* 
- * interface
- */
+#include <sys/param.h>
+#include <sys/types.h>
+#include <errno.h>
 
-const char *get_home_etc(char use_home_env);
+#define	ENV_VAR		"HOME_ETC"
+#define	HELPER_FILENAME	".home_etc"
 
-FILE *home_etc_fopen(const char *path, const char *mode);
-
+const char *obtain_home_dir(char use_home_env);
+const char *get_home_etc_core(char use_home_env);

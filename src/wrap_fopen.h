@@ -7,11 +7,4 @@
  *
  */
 
-/* 
- * interface
- */
-
-const char *get_home_etc(char use_home_env);
-
-FILE *home_etc_fopen(const char *path, const char *mode);
-
+FILE *home_etc_fopen_core(const char *path, const char *mode);
