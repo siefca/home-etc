@@ -10,9 +10,9 @@
 
 REQ_PACKAGE="pam"
 
-echo "home-etc - move your dotfiles! v1.0.1 (LGPL)"
+echo "home-etc - migrate your dotfiles! v1.0.1 (LGPL)"
 echo
-echo "This script will move known configuration files and directories"
+echo "This script will migrate known configuration files and directories"
 echo "which supports HOME-ETC from the given directory to the directory"
 echo "pointed out by the HOME_ETC variable."
 echo
@@ -33,11 +33,12 @@ if [ ! -d "$HOME_ETC" ]; then
     mkdir -p "$HOME_ETC" || exit 1
 fi
 
-line=`grep -n -e "-home-etc-mark-" $MYNAME | grep -v grep | cut -d':' -f1` 2>/dev/null
+line=`grep -n -e '-home-etc-mark-' $MYNAME | grep -v grep | cut -d':' -f1` 
 if [ x"$line" = x ]; then
     echo "$SHORTNAME: mark-line not found, aboting!"
     exit 1
 fi
+
 total=`cat $MYNAME | wc -l`
 line=$((total-line))
 
@@ -58,37 +59,65 @@ if [ $? -ne 0 ]; then
     echo "$SHORTNAME: Cannot create temp file, exiting.."
     exit 1
 fi
-TMPFILES=`mktemp -q $TMP/$SHOTRNAME.XXXXXX`
+TMPFILES=`mktemp -q $TMP/$SHORTNAME.XXXXXX`
+if [ $? -ne 0 ]; then
+    echo "$SHORTNAME: Cannot create temp file, exiting.."
+    exit 1
+fi
+TMPFILED=`mktemp -q $TMP/$SHORTNAME.XXXXXX`
 if [ $? -ne 0 ]; then
     echo "$SHORTNAME: Cannot create temp file, exiting.."
     exit 1
 fi
 
-tail -n $line $MYNAME | sort > $TMPFILE
+tail -n $line $MYNAME | cut -f1 | sort | uniq > $TMPFILE
 echo "$SHORTNAME: checking whether it is possible to query RPM.."
-rpm --quiet -q $REQ_PACKAGE && rpm -q --qf='%{name}\n' --whatrequires $REQ_PACKAGE 2>/dev/null | sort >$TMPFILES;
+rpm --quiet -q $REQ_PACKAGE && rpm -q --qf='%{name}\n' --whatrequires $REQ_PACKAGE 2>/dev/null | sort | uniq >$TMPFILES;
 userpm=`head -1 $TMPFILES`
 
 if [ x"$userpm" = x ]; then
     echo "$SHORTNAME: cannot use RPM, trust my instincts.."
+    tail -n $line $MYNAME | sort | uniq | tr -s '\t' | cut -f2 > $TMPFILES
     userpm=no
 else
     echo "$SHORTNAME: RPM allows user queries - comparing package names.."
-    comm -3 "$TMPFILE" "$TMPFILES"
+    comm "$TMPFILE" "$TMPFILES" | tr '\t' ',' | grep "^,," | cut -b3- > $TMPFILED
+    tail -n $line $MYNAME | sort | uniq > $TMPFILE
+    echo -n > $TMPFILES
+    cat $TMPFILE  | while read l
+    do
+	package=`echo "$l" | cut -f1`
+	file=`echo "$l" | tr -s '\t' | cut -f2`
+	grep -q "^$package" $TMPFILED  && echo "$file"  >> $TMPFILES
+    done
     userpm=yes
 fi
 
-#echo "$SHORTNAME: moving files..."
+echo "titi:"
+cat $TMPFILES
 
+rm -f $TMPFILE $TMPFILED	
+echo "$SHORTNAME: moving files.."
+cat $TMPFILES  | while read l
+do
+    if [ -f "$HOME/$l" -a -r "$HOME/$l" ]; then
+	mv -f "$HOME/$l" "$HOME_ETC/$l"
+	echo "$SHORTNAME: $HOME/$l\t\t-> $HOME_ETC/$l"
+    elif [ -d "$HOME/$l" -a -r "$HOME/$l" ]; then
+	mv -fr "$HOME/$l" "$HOME_ETC/$l"
+	echo "$SHORTNAME: $HOME/$l\t\t-> $HOME_ETC/$l (dir)"
+    fi
+done
 
+rm -f $TMPFILES
 echo "done!"
 
 exit 0
 
-##################
-# package:filename
+########################
+# package	filename
 #
 # -home-etc-mark-
-mutt:.mutt
-mutt:.muttrc
-pine:.pine
+mutt		.mutt
+mutt		.muttrc
+pine		.pine
