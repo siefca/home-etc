@@ -15,6 +15,9 @@ People who have been working on patches:
 
 EOF
 
+[ -d ../CVSROOT ] || ( cd .. && cvs get CVSROOT )
+( cd ../CVSROOT && cvs up users )
+
 cat ./patchwork/zrobione | tr -s '\t' ' ' | while read l
 do
     f=`echo "$l" | cut -b1`
