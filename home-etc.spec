@@ -1,15 +1,16 @@
-# $Revision: 1.8 $, $Date: 2003/12/07 17:06:11 $
+# $Revision: 1.9 $, $Date: 2003/12/07 17:15:03 $
 Summary:	HOME-ETC support for PLD Linux
 Summary(pl):	Wsparcie mechanizmu HOME-ETC dla PLD Linux
 Name:		home-etc
-Version:	1.0.1
-Release:	3
+Version:	1.0.2
+Release:	1
 Epoch:		1
 License:	LGPL
 Group:		Base
 Requires:	coreutils
 Requires:	shadow
 Source0:	ftp://ftp.pld-linux.org/people/siefca/distfiles/%{name}-%{version}.tar.gz
+# Source0-md5:	a8fb13ce505ac0a56c02ba34d44b3ea6
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -128,6 +129,9 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: home-etc.spec,v $
+Revision 1.9  2003/12/07 17:15:03  siefca
+- version: 1.0.2
+
 Revision 1.8  2003/12/07 17:06:11  siefca
 - added auto-update to the home-etc migration script against list
 - added patchwork dir containing working patches index

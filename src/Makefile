@@ -1,6 +1,6 @@
-# $Id: Makefile,v 1.14 2003/12/05 17:21:51 siefca Exp $
+# $Id: Makefile,v 1.15 2003/12/07 17:15:03 siefca Exp $
 NAME=home-etc
-VERSION=1.0.1
+VERSION=1.0.2
 CC=gcc
 RANLIB=ranlib
 CFLAGS=-fPIC -O2 -Wall -Werror -pedantic

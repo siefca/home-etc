@@ -1,5 +1,5 @@
 NAME=home-etc
-VERSION=1.0.1
+VERSION=1.0.2
 LIBNAME=libhome_etc.so
 
 DIRS=sh src skel patchwork
@@ -33,3 +33,9 @@ install:
 
 clean:
 	cd src && make clean
+
+publish:
+	$(MAKE) distclean
+	$(MAKE) dist
+	scp $(NAME)-$(VERSION).tar.gz siefca@kernel.pl:~/ftp-pld/distfiles
+	ssh siefca@kernel.pl 'chmod a+r ~/ftp-pld/distfiles/*'
