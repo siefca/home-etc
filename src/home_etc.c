@@ -15,9 +15,18 @@
 #include "core.h"
 #include "wrap_fopen.h"
 
+/* HOME_ETC location fetcher */
+
 const char *get_home_etc(char use_home_env)
 {
     return get_home_etc_core(use_home_env);
+}
+
+/* pathname reconstructor */
+
+const char *home_etc_path(const char *pathname)
+{
+    return home_etc_path_core(pathname);
 }
 
 /* fopen() wrapper */

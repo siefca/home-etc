@@ -132,3 +132,87 @@ const char *get_home_etc_core(char use_home_env)
 
     return NULL; /* say noooo */
 }
+
+const char *home_etc_path_core(const char *path)
+{
+    const char dirbuf[MAXPATHLEN];
+    char pathbuf[MAXPATHLEN];
+    char buf[MAXPATHLEN];
+    const char *home_etc_dir, *home_dir, *d;
+    char wasdir = 0;
+    size_t s;
+    
+    home_etc_dir = get_home_etc_core(1);
+    if (home_etc_dir == NULL || path == NULL || *path == '\0')
+	return NULL;
+    
+    s = strlen(path);
+    if (strlen(path) > sizeof(pathbuf)-2)
+	return NULL;
+
+    bzero(pathbuf, sizeof(pathbuf));
+    strncpy(pathbuf, path, sizeof(pathbuf));
+
+    /* is it a directory at the end?	*/
+    /* if yes, mark it and remember	*/
+    s--;
+    if (!s) return NULL;
+    if (s >= 0 && *(pathbuf+s) == '/')
+    {
+	wasdir = 1;
+	*(pathbuf+s) = '\0';
+	s--;
+	if (!s || *(pathbuf+s) == '/')
+	    return NULL;
+    }
+
+    home_dir = obtain_home_dir(1);
+    if (home_dir == NULL || *home_dir == '\0')
+	return NULL;
+
+    /* now, get the absolute path of the given directory 	*/
+    /* then check whether the path is a home directory path	*/
+
+    d = dirname(pathbuf);
+    if (d == NULL)
+        return NULL;
+
+    /* remember current dir */
+    bzero(dirbuf, sizeof(dirbuf));
+    if ((getcwd(dirbuf, sizeof(dirbuf)-1)) == NULL)
+	return NULL;
+
+    /* enter the dir */
+    if ((chdir(d)) == -1)
+        return NULL;
+
+    /* fetch the absolute pathname and put it into the buf */
+    bzero(buf, sizeof(buf));
+    if ((getcwd(buf, sizeof(buf)-1)) == NULL)
+    {
+	chdir(dirbuf); /* back */
+	return NULL;
+    }
+    /* back to old dir */
+    chdir(dirbuf);
+
+    /* difference test */
+    d = compare_paths(home_dir, buf);
+    
+    if (d == NULL)	/* buf does not contain home location */
+	return NULL;
+	
+    /* now the d variable contains		*/
+    /* the rest of the path, after homedir path	*/
+    
+    if ((strlen(home_etc_dir)) + (strlen(d)) + 4 > sizeof(dirbuf))
+    	return NULL; /* pathname too long */
+    
+    bzero(dirbuf, sizeof(dirbuf));
+    strcpy(dirbuf, home_etc_dir);
+    strcat(dirbuf, "/");
+    strcat(dirbuf, d);
+    if (wasdir) strcat(dirbuf, "/");
+
+    return dirbuf;
+}

@@ -21,84 +21,11 @@
 
 FILE *home_etc_fopen_core(const char *path, const char *mode)
 {
-    char pathbuf[MAXPATHLEN];
-    char dirbuf[MAXPATHLEN];
-    char buf[MAXPATHLEN];
-    const char *home_etc_dir, *home_dir, *d;
-    char wasdir = 0;
-    size_t s;
+    char *p;
     
-    home_etc_dir = get_home_etc_core(1);
-    if (home_etc_dir == NULL || path == NULL || *path == '\0')
-	return fopen(path, mode);
-    
-    s = strlen(path);
-    if (strlen(path) > sizeof(pathbuf)-2)
+    p = home_etc_path_core(path);
+    if (p == NULL)
 	return fopen(path, mode);
 
-    bzero(pathbuf, sizeof(pathbuf));
-    strncpy(pathbuf, path, sizeof(pathbuf));
-
-    /* is it a directory at the end?	*/
-    /* if yes, mark it and remember	*/
-    s--;
-    if (!s) return fopen(path, mode);
-    if (s >= 0 && *(pathbuf+s) == '/')
-    {
-	wasdir = 1;
-	*(pathbuf+s) = '\0';
-	s--;
-	if (!s || *(pathbuf+s) == '/')
-	    return fopen(path, mode);
-    }
-
-    home_dir = obtain_home_dir(1);
-    if (home_dir == NULL || *home_dir == '\0')
-	return fopen(path, mode);
-
-    /* now, get the absolute path of the given directory 	*/
-    /* then check whether the path is a home directory path	*/
-
-    d = dirname(pathbuf);
-    if (d == NULL)
-        return fopen(path, mode);
-
-    /* remember current dir */
-    bzero(dirbuf, sizeof(dirbuf));
-    if ((getcwd(dirbuf, sizeof(dirbuf)-1)) == NULL)
-	return fopen(path, mode);
-
-    /* enter the dir */
-    if ((chdir(d)) == -1)
-        return fopen(path, mode);
-
-    /* fetch the absolute pathname and put it into the buf */
-    bzero(buf, sizeof(buf));
-    if ((getcwd(buf, sizeof(buf)-1)) == NULL)
-    {
-	chdir(dirbuf); /* back */
-	return fopen(path, mode);
-    }
-    /* back to old dir */
-    chdir(dirbuf);
-
-    /* difference test */
-    d = compare_paths(home_dir, buf);
-    
-    if (d == NULL)	/* buf does not contain home location */
-	return fopen(path, mode);
-	
-    /* now the d variable contains		*/
-    /* the rest of the path, after homedir path	*/
-    
-    if ((strlen(home_etc_dir)) + (strlen(d)) + 4 > sizeof(dirbuf))
-    	return fopen(path, mode); /* pathname too long */
-    
-    bzero(dirbuf, sizeof(dirbuf));
-    strcpy(dirbuf, home_etc_dir);
-    strcat(dirbuf, "/");
-    strcat(dirbuf, d);
-    if (wasdir) strcat(dirbuf, "/");
-
-    return fopen(dirbuf, mode);
+    return fopen(p, mode);
 }
