@@ -147,6 +147,65 @@ Other way to do it:
     f = fopen(__HE(filename), "r");
 
     ...
+
+.ta
+.fi
+And here is part of \fIconfigure.in\fP, which makes a test whether the \fBlibhome_etc\fP can be used:
+.sp
+.nf
+.ne 12
+.ta 8n 16n
+AC_ARG_WITH(home-etc, [  --with-home-etc[=PFX] Use HOME-ETC library ],
+        [
+        if test "$with_home_etc" != "no"
+        then
+          if test "$with_home_etc" != "yes"
+          then
+            LDFLAGS="$LDFLAGS -L$with_home_etc/lib"
+          fi
+
+          saved_LIBS="$LIBS"
+
+          AC_CHECK_LIB(home_etc, get_home_etc_static,,
+            AC_MSG_ERROR([could not find libhome_etc]),)
+	    
+	  AC_CHECK_HEADERS(home_etc.h)
+
+          MUTTLIBS="$MUTTLIBS -lhome_etc"
+          LIBS="$saved_LIBS"
+          AC_DEFINE(USE_HOME_ETC,1,
+                  [ Define if want to use the HOME-ETC library. ])
+          need_home_etc=yes
+        fi
+        ])
+AM_CONDITIONAL(USE_HOME_ETC, test x$need_home_etc = xyes)
+
+.ta
+.fi
+If you're modifying specfile for RPM package you can use conditional build:
+.sp
+.nf
+.ne 12
+.ta 8n 16n
+
+    ...
+
+    %{!?_without_home_etc:BuildRequires:	home-etc-devel >= 1.0.6}
+    %{!?_without_home_etc:Requires:		home-etc >= 1.0.6}
+
+    ...
+
+    %build
+    %{__aclocal} -I m4
+    %{__autoconf}
+    %{__automake}
+    %configure \\
+	--enable-something \\
+	--without-something \\
+	%{!?_without_home_etc:--with-home-etc} \\
+	%{?_without_home_etc:--without-home-etc}
+
+    ...
 .ta
 .fi
 
