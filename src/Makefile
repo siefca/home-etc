@@ -1,30 +1,40 @@
-# $Id: Makefile,v 1.11 2003/11/28 18:31:48 siefca Exp $
-
+# $Id: Makefile,v 1.12 2003/11/30 12:05:54 siefca Exp $
+NAME=home-etc
+VERSION=1.0.1
 CC=gcc
+RANLIB=ranlib
 CFLAGS=-fPIC -O2 -Wall -Werror -pedantic
 CPPFLAGS=-I.
 LDFLAGS=-x --shared
-OUT=libhome_etc.so
-OBJECTS=core.o
+OUT=libhome_etc.so.1
+OUT_STATIC=libhome_etc.a
+LA_FILE=libhome_etc.la
+OBJECTS=core.o home_etc.o
 
-all:	$(OBJECTS) $(OUT)
+all:	$(OBJECTS) $(OUT) $(OUT_STATIC)
 
-$(OBJECTS): $(OBJECTS:.o=.c)
+%.o: %.c
 	$(CC) $(CFLAGS) $(RPMCFLAGS) -o $@ -c $<
 
-lib%.so: %.o
-	ld $(LDFLAGS) -o $@ $< $(OBJECTS)
+$(OUT): $(OBJECTS)
+	$(CC) -shared -Wl,-soname,$(OUT) -o $(OUT) $(OBJECTS)
+
+$(OUT_STATIC): $(OBJECTS)
+	ar -cr $@ $(OBJECTS)
+	$(RANLIB) $@
 
 test: core.c test.c
 	$(CC) $(CFLAGS) core.c test.c -o test
 
 clean:
-	rm -f a.out *.o test $(OUT)
+	rm -f a.out *.a *.o test *.so *.so.$(VERSION) *.so.1
 
 install:
 	install -d $(DESTDIR)/usr/lib
 	install -d $(DESTDIR)/usr/include
 	install -d $(DESTDIR)/usr/src/examples/$(NAME)-$(VERSION)
 	install -s -m755 $(OUT) $(DESTDIR)/usr/lib
+	install -m755 $(OUT_STATIC) $(DESTDIR)/usr/lib
+	install -m755 $(LA_FILE) $(DESTDIR)/usr/lib
 	install -m644 home_etc.h $(DESTDIR)/usr/include/home_etc.h
 	install -m644 example*.c $(DESTDIR)/usr/src/examples/$(NAME)-$(VERSION)

@@ -1,0 +1,27 @@
+# libhome_etc.la - a libtool library file
+#
+# Please DO NOT delete this file!
+# It is necessary for linking the library.
+
+# The name that we can dlopen(3).
+dlname='libhome_etc.so.1'
+
+# Names of this library.
+library_names='libhome_etc.so.1.0.1 libhome_etc.so.1 libhome_etc.so'
+
+# The name of the static archive.
+old_library='libhome_etc.a'
+
+# Libraries that this one depends upon.
+dependency_libs=''
+
+# Version information for libhome_etc.
+current=1
+age=0
+revision=1
+
+# Is this an already installed library?
+installed=yes
+
+# Directory that this library needs to be installed in:
+libdir='/usr/lib'
