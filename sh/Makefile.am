@@ -1,7 +1,10 @@
+profiledir = /etc/profile.d
 
-all:	update
+bin_SCRIPTS = home-etc
 
-update: home-etc
+profile_SCRIPTS = home-etc.sh home-etc.csh
+
+dist-local: 
 	./home-etc --update
 	mv -f home-etc.new home-etc
 

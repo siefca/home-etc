@@ -7,3 +7,11 @@ test
 a.out
 *.o
 *.so
+Makefile
+Makefile.in
+configure
+libtool
+config.log
+config.status
+autom4te.cache
+aclocal.m4
