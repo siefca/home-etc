@@ -6,8 +6,9 @@ cat >CONTRIBUTORS <<EOF
 
 People who helped me to work on the idea:
 
- Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
  Adam Ryba <pooh@gate.pl>
+ Przemek Borys <pborys@dione.ids.pl>
+ Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
  Tomasz Orzechowski <orzech@pld-linux.org>
 
 People who have been working on patches:

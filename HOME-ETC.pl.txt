@@ -217,4 +217,5 @@
 Autorem tego dokumentu jest		Pawe³ Wilk <siefca@gnu.org>
 Pomys³ na osobny katalog z danymi:	Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
 Pomys³ na zmienn± ¶rodowiskow±:		Adam Ryba <pooh@gate.pl>
+Pomys³ na makro w stylu gettext:	Przemek Borys <pborys@dione.ids.pl>
 Poprawki/aktualizacja:			Tomasz Orzechowski <orzech@pld-linux.org>
