@@ -143,7 +143,7 @@ const char *home_etc_path_core(const char *path)
     char *f, *d;
     char wasdir = 0;
     size_t s;
-    
+
     home_etc_dir = get_home_etc_core(1);
     if (home_etc_dir == NULL || path == NULL || *path == '\0')
 	return NULL;
@@ -159,15 +159,14 @@ const char *home_etc_path_core(const char *path)
     /* if yes, mark it and remember	*/
     s--;
     if (!s) return NULL;
-    if (s >= 0 && *(pathbuf+s) == '/')
+    if (s > 0 && *(pathbuf+s) == '/') /* was >= */
     {
 	wasdir = 1;
 	*(pathbuf+s) = '\0';
 	s--;
-	if (!s || *(pathbuf+s) == '/')
+	if (*(pathbuf+s) == '/')
 	    return NULL;
     }
-
     home_dir = obtain_home_dir(1);
     if (home_dir == NULL || *home_dir == '\0')
 	return NULL;
@@ -248,8 +247,11 @@ const char *home_etc_path_core(const char *path)
     bzero(dirbuf, sizeof(dirbuf));
     strcpy(dirbuf, home_etc_dir);	/* HOME_ETC		*/
     strcat(dirbuf, "/");		/* slash 		*/
-    strcat(dirbuf, p);			/* rest of the dir	*/
-    strcat(dirbuf, "/");		/* slash 		*/
+    if (p != NULL && *p != '\0')
+    {
+	strcat(dirbuf, p);		/* rest of the dir	*/
+	strcat(dirbuf, "/");		/* slash 		*/
+    }
     strcat(dirbuf, f);			/* the filename		*/
     if (wasdir) strcat(dirbuf, "/");
 
