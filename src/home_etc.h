@@ -55,3 +55,9 @@ void home_etc_reset();
 /* the location of the home directory and HOME_ETC	*/
 /* directories.						*/
 
+/*
+ Local Variables:
+ mode: c
+ c-set-style: "gnu"
+ End:
+*/

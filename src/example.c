@@ -25,18 +25,25 @@
 
 int main(int argc, char *argv[])
 {
-    char *p;
-    char path[2048];
-    FILE *f;
+  char *p;
+  char path[2048];
+  FILE *f;
+
+  bzero(path, sizeof(path));
+  p = getenv("HOME");
+  if (p) strncpy(path, p, sizeof(path)-64);
+  strcat(path, "/.myrcfile");
+
+  /* was: f = fopen(path, "r"); */
+  f = fopen(_HE(path), "r"); /***/
     
-    bzero(path, sizeof(path));
-    p = getenv("HOME");
-    if (p) strncpy(path, p, sizeof(path)-64);
-    strcat(path, "/.myrcfile");
-    
-    /* was: f = fopen(path, "r"); */
-    f = fopen(_HE(path), "r");	/***/
-    
-    if (f) fclose(f);
-    exit(0);
+  if (f) fclose(f);
+  exit(0);
 }
+
+/*
+  Local Variables:
+  mode: c
+  c-set-style: "gnu"
+  End:
+*/

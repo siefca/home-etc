@@ -81,3 +81,10 @@ char *strchr (), *strrchr ();
 #endif
 
 #endif
+
+/*
+ Local Variables:
+ mode: c
+ c-set-style: "gnu"
+ End:
+*/

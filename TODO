@@ -1,7 +1,6 @@
-- automake/libtoolize :>
-- locale support in migration script
+- locale support in migration script (?)
 
-- developer notes:
+- documentation -- developer notes for:
 
     - patching existing applications
     - developing new applications

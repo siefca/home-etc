@@ -14,140 +14,147 @@
 
 const char *compare_paths(const char *a, const char *b)
 {
-    size_t s_a, s_b;
-    register const char *p;
+  size_t s_a, s_b;
+  register const char *p;
 
-    if (a == NULL || b == NULL)
-	return NULL;
-    if (*a == '\0' || *b == '\0')
-	return NULL;
+  if (a == NULL || b == NULL)
+    return NULL;
 
-    s_a = strlen(a);
-    s_b = strlen(b);
-    if (s_a > s_b)
-	return NULL;
+  if (*a == '\0' || *b == '\0')
+    return NULL;
 
-    if (strncmp(a, b, s_a))
-	return NULL;    
+  s_a = strlen(a);
+  s_b = strlen(b);
+  if (s_a > s_b)
+    return NULL;
 
-    p = b;
-    p += strlen(a);
+  if (strncmp(a, b, s_a))
+    return NULL;    
 
-    if (*p != '\0' && *p != '/')
-	return NULL; /* strange, e.g.: /home/users/johnsomercfile */
+  p = b;
+  p += strlen(a);
+
+  if (*p != '\0' && *p != '/')
+    return NULL; /* strange, e.g.: /home/users/johnsomercfile */
 	
-    if (*p != '\0')
-	p++;
+  if (*p != '\0')
+    p++;
 
-    return p;
+  return p;
 }
 
 /*********************************************************************/
 
 inline static int canonize_dir(char *path, size_t s)
 {
-    char buff[MAXPATHLEN];
+  char buff[MAXPATHLEN];
     
-    if (! getcwd(buff, sizeof(buff)-2))
-	return -1;
-    buff[MAXPATHLEN-1] = '\0';
-    if (chdir(path) == -1)
-	return -1;
-    if (! getcwd(path, s))
+  if (! getcwd(buff, sizeof(buff)-2))
+    return -1;
+  buff[MAXPATHLEN-1] = '\0';
+  if (chdir(path) == -1)
+    return -1;
+  if (! getcwd(path, s))
     {
-	chdir(buff);
-	return -1;
+      chdir(buff);
+      return -1;
     }
 
-    if (*path == '/' && *(path+1) == '\0')
-	*path = '\0';
+  if (*path == '/' && *(path+1) == '\0')
+    *path = '\0';
 
-    chdir(buff);
-    return 0;
+  chdir(buff);
+  return 0;
 }
 
 /*********************************************************************/
 
 const char *canonize_path(const char *path)
 {
-    int counter = 254;
-    size_t s;
-    char *p = NULL, *q = NULL;
-    char buff[MAXPATHLEN];
-    static char pathbuf[MAXPATHLEN];
+  int counter = 254;
+  size_t s;
+  char *p = NULL, *q = NULL;
+  char buff[MAXPATHLEN];
+  static char pathbuf[MAXPATHLEN];
 
-    bzero(buff, sizeof(buff));
-    bzero(pathbuf, sizeof(pathbuf));
+  bzero(buff, sizeof(buff));
+  bzero(pathbuf, sizeof(pathbuf));
 
-    s = strlen(path);
-    if (s > sizeof(buff) - 2 || s <= 0)
+  s = strlen(path);
+  if (s > sizeof(buff) - 2 || s <= 0)
+    return NULL;
+
+  if (*path != '/')
+    {
+      if (! getcwd(buff, sizeof(buff)))
 	return NULL;
-
-    if (*path != '/')
-    {
-	if (! getcwd(buff, sizeof(buff)))
-	    return NULL;
-	s += strlen(buff);
-	if (s > sizeof(pathbuf) - 2)
-	    return NULL;
-	strcpy(pathbuf, buff);
-	*buff = '\0';
+      s += strlen(buff);
+      if (s > sizeof(pathbuf) - 2)
+	return NULL;
+      strcpy(pathbuf, buff);
+      *buff = '\0';
     }
 
-    strncat(buff, path, sizeof(buff)-1);
-    p = buff;
-    if (*p == '/') p++;
-    s = strlen(pathbuf) - 2;
+  strncat(buff, path, sizeof(buff)-1);
+  p = buff;
+  if (*p == '/') p++;
+  s = strlen(pathbuf) - 2;
 
-    while (s > 0 && counter > 0 && (q = strchr(p, (int)'/')))
+  while (s > 0 && counter > 0 && (q = strchr(p, (int)'/')))
     {
-	if (*(q+1) != '\0')
-	    *q = '\0';
-	s -= strlen(p) + 1;
-	if (s <= 0) return NULL;
-	strcat(pathbuf, "/");
-	strcat(pathbuf, p);
-	p = q+1;
-	if (canonize_dir(pathbuf, s) == -1)
-	    break;
-	counter--;
+      if (*(q+1) != '\0')
+	*q = '\0';
+      s -= strlen(p) + 1;
+      if (s <= 0) return NULL;
+      strcat(pathbuf, "/");
+      strcat(pathbuf, p);
+      p = q+1;
+      if (canonize_dir(pathbuf, s) == -1)
+	break;
+      counter--;
     }
-    if (s <= 0 || counter <= 0) return NULL;
+  if (s <= 0 || counter <= 0) return NULL;
     
-    if (p && *p != '\0')
+  if (p && *p != '\0')
     {
-	s = sizeof(pathbuf) - strlen(pathbuf) - 2;
-	if (strlen(p) > s) return NULL;
-	strcat(pathbuf, "/");
-	strcat(pathbuf, p);
+      s = sizeof(pathbuf) - strlen(pathbuf) - 2;
+      if (strlen(p) > s) return NULL;
+      strcat(pathbuf, "/");
+      strcat(pathbuf, p);
     }
 
-    return pathbuf;
+  return pathbuf;
 }
 
 /*********************************************************************/
 
 const char *obtain_home_dir(char use_env)
 {
-    struct passwd *pw;
-    char *p = NULL;
+  struct passwd *pw;
+  char *p = NULL;
 
-    if (use_env)
+  if (use_env)
     {
-        p = getenv("HOME");
+      p = getenv("HOME");
     }
-    if (p != NULL)
+  if (p != NULL)
     {
-        return p;
+      return p;
     }
 
-    pw = getpwuid(geteuid());
-    endpwent();
-    if (pw != NULL && pw->pw_dir != NULL && *pw->pw_dir != '\0')
+  pw = getpwuid(geteuid());
+  endpwent();
+  if (pw != NULL && pw->pw_dir != NULL && *pw->pw_dir != '\0')
     {
-	return pw->pw_dir;
+      return pw->pw_dir;
     }
     
-    return NULL;
+  return NULL;
 }
 
+/*
+  Local Variables:
+  mode: c
+  c-set-style: "gnu"
+  End:
+*/

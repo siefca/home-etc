@@ -1,3 +1,4 @@
+*~
 CONTRIBUTORS
 autoscan.log
 stamp-h1
@@ -8,7 +9,6 @@ home-etc-2*
 home-etc.spec
 config.h
 config.h.in
-config.h.in~
 test
 a.out
 *.o

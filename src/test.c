@@ -6,87 +6,94 @@
 
 int main (int argc, char *argv[])
 {
-    char b[MAXPATHLEN*2];
-    int x;
-    const char *a[] = { "aaaa/.muttrc", ".muttrc", "aaa/bbb/ccc/", "aaa/bbb/",
-			"/home/users/siefca/.muttrc", "/home/users/siefca/.muttrc/xxx",
-			"/home/users/siefca/.a", "/home/../home/users/siefca/hmm",
-			"/home/../home/users/siefca/hmm/", "/home/users/siefca/.muttrc/",
-			"tmp/.muttrc", "tmp/.muttrc/"
-		      };
+  char b[MAXPATHLEN*2];
+  int x;
+  const char *a[] = { "aaaa/.muttrc", ".muttrc", "aaa/bbb/ccc/", "aaa/bbb/",
+		      "/home/users/siefca/.muttrc", "/home/users/siefca/.muttrc/xxx",
+		      "/home/users/siefca/.a", "/home/../home/users/siefca/hmm",
+		      "/home/../home/users/siefca/hmm/", "/home/users/siefca/.muttrc/",
+		      "tmp/.muttrc", "tmp/.muttrc/"
+  };
 
-    printf("\nHOME_ETC:\t%s\n\n", get_home_etc(1));
+  printf("\nHOME_ETC:\t%s\n\n", get_home_etc(1));
 
-    for (x = 0; x < sizeof(a) / sizeof(char *); x++)
+  for (x = 0; x < sizeof(a) / sizeof(char *); x++)
     {
-	printf(" path:\t\t%s\n result:\t%s\n----------------------------\n",
-	        a[x],
-		home_etc_path(a[x],1));
+      printf(" path:\t\t%s\n result:\t%s\n----------------------------\n",
+	     a[x],
+	     home_etc_path(a[x],1));
     }
 
-    /* hard-core routines */
+  /* hard-core routines */
 
-    printf("\n----------------------------\n"
-	   "hard-core tests\n"
-	   "----------------------------\n");
+  printf("\n----------------------------\n"
+	 "hard-core tests\n"
+	 "----------------------------\n");
 
-    printf("press any key...\n");
-    (void) getc(stdin);
+  printf("press any key...\n");
+  (void) getc(stdin);
 
-    for (x = 0; x <= MAXPATHLEN+8; x++)
-	b[x] = '/';
-    b[x] = '\0';
+  for (x = 0; x <= MAXPATHLEN+8; x++)
+    b[x] = '/';
+  b[x] = '\0';
 
-    printf(" path:\t\t%s\n result:\t%s\n----------------------------\n",
-	        b,
-		home_etc_path(b,1));
+  printf(" path:\t\t%s\n result:\t%s\n----------------------------\n",
+	 b,
+	 home_etc_path(b,1));
 
-    printf("press any key...\n");
-    (void) getc(stdin);
+  printf("press any key...\n");
+  (void) getc(stdin);
 
-    for (x = 0; x <= MAXPATHLEN+8; x++)
-	b[x] = 'a';
-    b[x] = '\0';
+  for (x = 0; x <= MAXPATHLEN+8; x++)
+    b[x] = 'a';
+  b[x] = '\0';
 
-    printf(" path:\t\t%s\n result:\t%s\n----------------------------\n",
-	        b,
-		home_etc_path(b,1));
+  printf(" path:\t\t%s\n result:\t%s\n----------------------------\n",
+	 b,
+	 home_etc_path(b,1));
 
-    printf("press any key...\n");
-    (void) getc(stdin);
+  printf("press any key...\n");
+  (void) getc(stdin);
 
-    for (x = 0; x <= MAXPATHLEN-128; x++)
-	b[x] = 'b';
-    b[x] = '\0';
+  for (x = 0; x <= MAXPATHLEN-128; x++)
+    b[x] = 'b';
+  b[x] = '\0';
 
-    printf(" path:\t\t%s\n result:\t%s\n----------------------------\n",
-	        b,
-		home_etc_path(b,1));
+  printf(" path:\t\t%s\n result:\t%s\n----------------------------\n",
+	 b,
+	 home_etc_path(b,1));
 
-    /* wrapper tests */
+  /* wrapper tests */
 
-    printf("\n----------------------------\n"
-	   "wrapper tests\n"
-	   "----------------------------\n");
+  printf("\n----------------------------\n"
+	 "wrapper tests\n"
+	 "----------------------------\n");
 
-    printf("press any key...\n");
-    (void) getc(stdin);
+  printf("press any key...\n");
+  (void) getc(stdin);
 
-    for (x = 0; x < sizeof(a) / sizeof(char *); x++)
+  for (x = 0; x < sizeof(a) / sizeof(char *); x++)
     {
-	printf(" path:\t\t%s\n result:\t%s\n----------------------------\n",
-	        a[x],
-		_HE(a[x]));
+      printf(" path:\t\t%s\n result:\t%s\n----------------------------\n",
+	     a[x],
+	     _HE(a[x]));
     }
 
-    printf("press any key...\n");
-    (void) getc(stdin);
+  printf("press any key...\n");
+  (void) getc(stdin);
 
-    printf("_HEdir: %s\n", _HEdir);
-    printf("_HEndir: %s\n", _HEndir);
+  printf("_HEdir: %s\n", _HEdir);
+  printf("_HEndir: %s\n", _HEndir);
 
-    printf("press any key...\n");
-    (void) getc(stdin);
+  printf("press any key...\n");
+  (void) getc(stdin);
 
-    return 0;
+  return 0;
 }
+
+/*
+  Local Variables:
+  mode: c
+  c-set-style: "gnu"
+  End:
+*/

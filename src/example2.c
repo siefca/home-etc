@@ -19,13 +19,20 @@
 
 int main(int argc, char *argv[])
 {
-    const char *p;
+  const char *p;
 
-    setenv("HOME", "/root", 1);
-    setenv("HOME_ETC", "/root/myconfigs", 1);
+  setenv("HOME", "/root", 1);
+  setenv("HOME_ETC", "/root/myconfigs", 1);
     
-    p = _HE("/root/.myrc");
-    printf("path: %s\n", p);
+  p = _HE("/root/.myrc");
+  printf("path: %s\n", p);
 
-    exit(0);
+  exit(0);
 }
+
+/*
+  Local Variables:
+  mode: c
+  c-set-style: "gnu"
+  End:
+*/

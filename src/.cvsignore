@@ -1,3 +1,4 @@
+*~
 test
 a.out
 *.o
@@ -12,3 +13,5 @@ example
 example2
 example3
 test
+TAGS
+tags

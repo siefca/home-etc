@@ -24,3 +24,10 @@ const char *canonize_path(const char *path);
 const char *compare_paths(const char *a, const char *b);
 
 #endif
+
+/*
+ Local Variables:
+ mode: c
+ c-set-style: "gnu"
+ End:
+*/

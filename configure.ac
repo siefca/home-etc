@@ -1,10 +1,10 @@
-AC_INIT([home-etc],[1.0.8],[siefca/at/gnu.org])
+AC_INIT([home-etc],[1.0.9],[siefca/at/gnu.org])
 AC_CONFIG_HEADER([config.h])
 PACKAGE=$PACKAGE_NAME
 VERSION=$PACKAGE_VERSION
 AM_INIT_AUTOMAKE
 
-RELEASE=2
+RELEASE=1
 SUMMARY="HOME-ETC support programs and libraries"
 AC_SUBST(RELEASE)
 AC_SUBST(SUMMARY)
@@ -27,7 +27,6 @@ AC_PROG_MAKE_SET
 AC_PROG_AWK
 AC_ISC_POSIX
 AC_PROG_LN_S
-
 
 dnl Checks for header files.
 AC_HEADER_STDC

@@ -21,10 +21,12 @@
 /* above definition shouldn't be set here */
 /* but in config.h			  */
 
-/* define the _HE_DAEMON just _before_ including home_etc.h */
-/* if an application is a daemon which may keep a false     */
-/* environment while becoming a user (e.g. to make a mail   */
-/* delivery)                                                */
+/* 
+ * define the _HE_DAEMON just _before_ including home_etc.h
+ * if an application is a daemon which may keep a false   
+ * environment while becoming a user (e.g. to make a mail delivery)
+ *
+ */
 
 #ifdef HAVE_HOME_ETC_H
 # define _HE_DAEMON
@@ -36,8 +38,14 @@
 
 int main (int argc, char *argv[])
 {
-    printf("path: %s\n", __HE("/root/dupa"));
+  printf("path: %s\n", __HE("/root/dupa"));
     
-    exit(0);
+  exit(0);
 }
 
+/*
+  Local Variables:
+  mode: c
+  c-set-style: "gnu"
+  End:
+*/
