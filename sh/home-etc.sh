@@ -1,4 +1,3 @@
-#!/bin/sh
 
 if [ -r $HOME/.home_etc ]; then
     HOME_ETC=`cat $HOME/.home_etc | head -n1`
@@ -12,4 +11,3 @@ if [ -r $HOME/.home_etc ]; then
     fi
 fi
 
-echo "HOME_ETC=$HOME_ETC"
