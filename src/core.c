@@ -219,10 +219,12 @@ const char *home_etc_path_core(const char *path)
 		}
 		strcat(dirbuf, f);		/* filename		*/
 		if (wasdir) strcat(dirbuf, "/");
+	    free(d); free(f);
 	    return dirbuf;
 	}
 	else
 	{
+	    free(d); free(f);
 	    return NULL;
 	}
     }
