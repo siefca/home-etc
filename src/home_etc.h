@@ -13,16 +13,27 @@
 
 /* HOME_ETC location fetcher */
 
+#ifndef	__HOME_ETC_H
+#define	__HOME_ETC_H
+
 const char *get_home_etc(char use_home_env);
 
 /* pathname reconstructor */
 
 const char *home_etc_path(const char *pathname);
 
-/* nice macro */
+/* a sweet wrapper */
 
-#ifndef		H_E(x)
-# define	H_E(x) home_etc_path(x)
+inline const char *H_E(const char *pathname)
+{
+    const char *p = home_etc_path(pathname);
+    
+    if (p == NULL)
+	return pathname;
+	
+    return p;
+}
+
 #endif
 
 

@@ -16,9 +16,12 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <home_etc.h> 		/***/
 
+/* note that H_E macro is safe, it will never reports NULL	*/
+/* since its argument was not NULL				*/
 
 int main(int argc, char *argv[])
 {
@@ -32,10 +35,8 @@ int main(int argc, char *argv[])
     strcat(path, "/.myrcfile");
     
     /* was: f = fopen(path, "r"); */
-    
     f = fopen(H_E(path), "r");	/***/
-
-    fclose(f);
-
+    
+    if (f) fclose(f);
     exit(0);
 }

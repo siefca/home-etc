@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.10 2003/11/28 18:05:27 siefca Exp $
+# $Id: Makefile,v 1.11 2003/11/28 18:31:48 siefca Exp $
 
 CC=gcc
 CFLAGS=-fPIC -O2 -Wall -Werror -pedantic
@@ -27,4 +27,4 @@ install:
 	install -d $(DESTDIR)/usr/src/examples/$(NAME)-$(VERSION)
 	install -s -m755 $(OUT) $(DESTDIR)/usr/lib
 	install -m644 home_etc.h $(DESTDIR)/usr/include/home_etc.h
-	install -m644 example.c $(DESTDIR)/usr/src/examples/$(NAME)-$(VERSION)/example.c
+	install -m644 example*.c $(DESTDIR)/usr/src/examples/$(NAME)-$(VERSION)
