@@ -28,11 +28,11 @@ home_etc_path \- pathname reconstructor
 This function rewrites the given \fIpathname\fP according
 to the result of \fBget_home_etc_static(3)\fP. It tries to canonize
 as much parts of the directories as it is possible in:
-pathname, (obtained beforre) home directory, and \fBHOME_ETC\fP.
+pathname and (obtained before) home directory.
 
 Substitution is made for the found string of the user's home directory,
 which is searched in the pathname. The home-dir part of the string
-becomes the value of the \fBHOME_ETC\fP obtained before.
+becomes the value of the \fBHOME_ETC\fP.
     
 The use_env is simply passed to the \fBget_home_etc_static(3)\fP.
     
@@ -218,7 +218,7 @@ a larger strings the NULL is generated while parsing.
 
 If you want the very current informations and need to refresh
 the cache used to store the \fBHOME_ETC\fP pathname use \fBhome_etc_reset(3)\fP function
-just before \fBhome_etc_path\fP or its wrappers.
+just before \fBhome_etc_path(3)\fP or its wrappers.
 
 .SH "SEE ALSO"
 .BR home_etc(3),
