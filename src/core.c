@@ -60,6 +60,9 @@ const char *compare_paths(const char *a, const char *b)
     p = b;
     p += strlen(a);
     
+    if (*p != '\0' && *(p+1) != '/')
+	return NULL; /* strange, e.g.: /home/users/johnsomercfile */
+
     return p;
 }
 

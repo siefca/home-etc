@@ -67,10 +67,12 @@ FILE *home_etc_fopen_core(const char *path, const char *mode)
     bzero(dirbuf, sizeof(dirbuf));
     if ((getcwd(dirbuf, sizeof(dirbuf)-1)) == NULL)
 	return fopen(path, mode);
+
     /* enter the dir */
     if ((chdir(d)) == -1)
         return fopen(path, mode);
-    /* fetch the absolute name */
+
+    /* fetch the absolute name and put into the buf */
     bzero(buf, sizeof(buf));
     if ((getcwd(buf, sizeof(buf)-1)) == NULL)
     {
@@ -81,10 +83,14 @@ FILE *home_etc_fopen_core(const char *path, const char *mode)
     chdir(dirbuf);
 
     /* difference test */
-    d = compare_paths(home_dir, d);
+    d = compare_paths(home_dir, buf);
     
-    if (d == NULL)	/* does not contain home location */
+    if (d == NULL)	/* buf does not contain home location */
 	return fopen(path, mode);
+	
+    /* now d variable contains			*/
+    /* the rest of the path, after homedir path	*/
+    
 
     /* compile output directory string	*/
     /* substitution:			*/
@@ -92,6 +98,9 @@ FILE *home_etc_fopen_core(const char *path, const char *mode)
     /* rest into rest			*/
     /* add slash if there was any	*/
 
-    
+    HOME_ETC | d
+
+    /* HOME_ETC is in home_etc_dir	*/
+    /* rest     is in     
 
 }
