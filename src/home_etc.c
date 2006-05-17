@@ -90,6 +90,7 @@ const char *get_home_etc(char use_env)
 
 const char *home_etc_path(const char *path, char use_env)
 {
+  char trailslash = 0;
   static char dirbuf[MAXPATHLEN];
   char pathbuf[MAXPATHLEN];
   char home_dir[MAXPATHLEN];
@@ -106,9 +107,15 @@ const char *home_etc_path(const char *path, char use_env)
   if (strlen(path) > sizeof(pathbuf)-2)
     return NULL;
 
+  /* memorize trailing slash */
+  if (s > 0 && *(path+s-1) == '/')
+    trailslash = 1;
+
+  /* clean the buffers */
   bzero(home_dir, sizeof(home_dir));
   bzero(pathbuf, sizeof(pathbuf));
   bzero(dirbuf, sizeof(dirbuf));
+
 
   /* absolutize home directory name */
   strncpy(home_dir, p, sizeof(home_dir)-1);
@@ -138,6 +145,19 @@ const char *home_etc_path(const char *path, char use_env)
   strcat(dirbuf, "/");		/* slash 	*/
   if (*p != '\0')
     strcat(dirbuf, p);		/* rest of the dir */
+
+  /* add or remove trailing slash as memorized before */
+  s = strlen(dirbuf);
+  if (s > 0)
+    {
+      if(trailslash && (*(dirbuf+s-1) != '/') && s < sizeof(dirbuf)-2)
+        {
+	  *(dirbuf+s) = '/';
+	  *(dirbuf+s+1) = '\0';
+	}
+      if(!trailslash && (*(dirbuf+s-1) == '/'))
+        *(dirbuf+s-1) = '\0';
+    }
 
   return dirbuf;
 }

@@ -90,8 +90,21 @@ const char *canonize_path(const char *path, char use_env, char expand_tilde)
   bzero(buff, sizeof(buff));
   bzero(pbuff, sizeof(pbuff));
 
-  /* if we have leading tilde-slash */
-  if (expand_tilde && *path == '~' && *(path+1) == '/')
+  /* if we have just tilde */
+  if (expand_tilde && *path == '~' && *(path+1) == '\0')
+    {
+      home_d = obtain_home_dir(use_env);
+      if (home_d == NULL ||
+          strlen(home_d) + strlen(path) > sizeof(buff)-2)
+        {
+	  chdir(prev);
+          return NULL;
+        }
+    }
+
+  /* if we have leading tilde-slash or just tilde */
+  if (expand_tilde && *path == '~' &&
+      (*(path+1) == '/' || *(path+1) == '\0') )
     {
       home_d = obtain_home_dir(use_env);
       if (home_d == NULL ||
@@ -101,7 +114,10 @@ const char *canonize_path(const char *path, char use_env, char expand_tilde)
           return NULL;
         }
       strcpy(buff, home_d);      /* strcpy checked */
-      strcat(buff, path+1);      /* strcat checked */
+      if (*(path+1) != '\0')
+        strcat(buff, path+1);    /* strcat checked */
+      else
+	trailslash = 0;
     }
     else /* or just copy path into buffer */
     {
@@ -215,7 +231,7 @@ const char *canonize_path(const char *path, char use_env, char expand_tilde)
 	  *(pbuff+s+1) = '\0';
 	}
       if(!trailslash && (*(pbuff+s-1) == '/'))
-        *(pbuff+s) = '\0';
+        *(pbuff+s-1) = '\0';
     }
 
   /* go back to the directory we were and return pointer to buffer */

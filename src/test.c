@@ -82,6 +82,40 @@ int main (int argc, char *argv[])
 	     _HE(a[x]));
     }
 
+  printf("\n----------------------------\n"
+	 "wrapper hard-core tests\n"
+	 "----------------------------\n");
+
+  printf("press any key...\n");
+  (void) getc(stdin);
+
+  for (x = 0; x <= MAXPATHLEN+8; x++)
+    b[x] = '/';
+  b[x] = '\0';
+
+  printf(" path:\t\t%s\n result:\t%s\n----------------------------\n",
+	 b, _HE(b));
+
+  printf("press any key...\n");
+  (void) getc(stdin);
+
+  for (x = 0; x <= MAXPATHLEN+8; x++)
+    b[x] = 'a';
+  b[x] = '\0';
+
+  printf(" path:\t\t%s\n result:\t%s\n----------------------------\n",
+	 b, _HE(b));
+
+  printf("press any key...\n");
+  (void) getc(stdin);
+
+  for (x = 0; x <= MAXPATHLEN-128; x++)
+    b[x] = 'b';
+  b[x] = '\0';
+
+  printf(" path:\t\t%s\n result:\t%s\n----------------------------\n",
+	 b, _HE(b));
+
   printf("press any key...\n");
   (void) getc(stdin);
 
