@@ -38,7 +38,10 @@ int main(int argc, char *argv[])
       if (r == NULL || *r == '\0')
         {
           er = errno;
-          perror("realpath");
+	  if (*r == '\0')
+	    fprintf(stderr, "realpath: got an empty result\n");
+	  else
+            perror("realpath");
           fprintf(stdout, "-\n"); 
         }
       else

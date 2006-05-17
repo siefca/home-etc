@@ -76,6 +76,10 @@ char *strchr (), *strrchr ();
 # include <pwd.h>
 #endif
 
+#if HAVE_ERRNO_H
+# include <errno.h>
+#endif
+
 #ifndef MAXPATHLEN
 # define MAXPATHLEN	4096
 #endif

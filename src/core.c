@@ -7,10 +7,10 @@
  *
  */
 
-#include <stdio.h>
-
 #include "includes.h"
 #include "core.h"
+
+extern int errno;
 
 /*********************************************************************/
 
@@ -64,7 +64,7 @@ inline static int absolutize_dir(char *path, size_t s)
 
 /*********************************************************************/
 
-const char *canonize_path(const char *path, char use_env, char expand_tilde)
+char *canonize_path(const char *path, char use_env, char expand_tilde)
 {
   char trailslash = 0;
   int counter = 256;

@@ -21,16 +21,16 @@ home_etc_expand_tilde \- toggle tilde-slash pair parsing
 .BI _HE_UNLIKE_TILDE;
 .fi
 .SH DESCRIPTION
-The function \fBhome_etc_expand_tilde(3)\fP is used to set leading
+The function \fBhome_etc_expand_tilde(3)\fP is used to set the leading
 tilde & slash parsing, while processing pathnames by \fBhome_etc_path(3)\fP.
 It takes one argument, which should be set to 0 to disable and to non-zero to
-enable parsing of a leading \fI~/\fP string found in path. When parsing
+enable parsing of the leading \fI~/\fP string found in path. When parsing
 is enabled, the path is expanded by replacing \fI~/\fP by user's home directory
 pathname while invoking internal routines. Additionally, the \fI~\fP character
 is also translated into user's home directory name, but only if the whole parsed
 path contains only that one character.
 
-The way to obtain user's home directory depends on method choosen while
+The way to obtain user's home directory depends on method chosen while
 invoking \fBhome_etc_path(3)\fP. The \fIuse_env\fP is a swich which
 determines the method to obtain user's home directory. If it's set
 to 1 home directory is obtained using \fIHOME\fP environment variable.

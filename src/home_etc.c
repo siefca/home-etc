@@ -119,12 +119,12 @@ const char *home_etc_path(const char *path, char use_env)
 
   /* absolutize home directory name */
   strncpy(home_dir, p, sizeof(home_dir)-1);
-  p = canonize_path(home_dir, use_env, 0);
+  p = (const char *) canonize_path(home_dir, use_env, 0);
   if (p == NULL || *p == '\0')
     return NULL;
 
   /* absolutize given pathname */
-  p = canonize_path(path, use_env, h_etc_expand_tilde);
+  p = (const char *) canonize_path(path, use_env, h_etc_expand_tilde);
   if (p == NULL || *p == '\0')
     return NULL;
 
@@ -241,11 +241,45 @@ void home_etc_expand_tilde(const char expand_tilde)
 }
 
 /****************************************************************/
-/* canonize pathname as it is possible */
+/* canonize as many pathname's parts as it is possible */
 
 const char *path_canonize(const char *path, char use_env)
 {
-    return canonize_path(path, use_env, h_etc_expand_tilde);
+  size_t s = 0;
+  const char *r;
+  char *p = NULL;
+  char *q = NULL;
+  char *b = NULL;
+
+  p = canonize_path(path, use_env, h_etc_expand_tilde);
+  if (p == NULL)
+    return NULL;
+
+  /* remove doubled slashes */
+  q = b = p;
+  while (*q != '\0')
+    {
+      if (*q == '/' && *(q+1) == '/' && (s=1))
+        while (*(q+1) == '/') q++;
+      else
+        {
+	  if (s)
+            {
+              *b = *q;
+            }
+        }
+      q++; b++;
+    }
+  if (q > b)
+    *b = '\0';
+
+  /* check whether the trailing slash should be removed */
+  s = strlen(p);
+  if (s > 0 && *(p+s-1) == '/' && !isdir(p))
+    *(p+s-1) = '\0';
+
+  r = (const char *) p;
+  return r;
 }
 
 /*
