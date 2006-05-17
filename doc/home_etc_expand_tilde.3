@@ -1,0 +1,72 @@
+.\" Copyright (c) 2003-2006 by Pawe³ Wilk <siefca@gnu.org>
+.\"
+.\" Permission is granted to copy, distribute and/or modify this document
+.\" under the terms of the GNU Free Documentation License, Version 1.2
+.\" or any later version published by the Free Software Foundation;
+.\" with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+.\" A copy of the license is included in the section entitled "GNU
+.\" Free Documentation License"; if it's not, contact Free Software Foundation, Inc.
+.\" 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA to obtain one.
+.\"
+.TH home_etc_reset "3" "PLD Linux/GNU" "December 2003" "HOME-ETC"
+.SH NAME
+home_etc_expand_tilde \- toggle tilde-slash pair parsing
+.SH SYNOPSIS
+.nf
+.B #include <home_etc.h>
+.sp
+.BI "void home_etc_expand_tilde(const char);"
+.sp
+.BI _HE_LIKE_TILDE;
+.BI _HE_UNLIKE_TILDE;
+.fi
+.SH DESCRIPTION
+The function \fBhome_etc_expand_tilde(3)\fP is used to set leading
+tilde & slash parsing, while processing pathnames by \fBhome_etc_path(3)\fP.
+It takes one argument, which should be set to 0 to disable and to non-zero to
+enable parsing of a leading \fI~/\fP string found in path. When parsing
+is enabled, the path is expanded by replacing \fI~/\fP by user's home directory
+pathname while invoking internal routines.
+
+The way to obtain user's home directory depends on method choosen while
+invoking \fBhome_etc_path(3)\fP (see \fIuse_env\fP description in the
+manual).
+
+Once invoked this function keeps last setting memorized. The parsing
+by default is in state DISABLED.
+
+\fB_HE_LIKE_TILDE\fP and \fB_HE_UNLIKE_TILDE\fP are macros for this function.
+Usage is self-explanatory (but don't forget to add trailing semicolon in case of
+use, e.g. _HE_LIKE_TILDE; to keep the syntax ok).
+
+.SH "RETURN VALUE"
+This function returns no value.
+
+.SH EXAMPLES
+for HOME=\fI/home/users/siefca\fP
+and HOME_ETC=\fI/usr/siefca-configs\fP
+.sp    
+the function:
+.sp
+.BI "home_etc_expand_tilde(" 1 );
+.BI "home_etc_path("""~/.muttrc """, " 1 );
+.sp    
+
+will return
+.I /usr/siefca-configs/.muttrc
+
+.SH "SEE ALSO"
+.BR home_etc(3)
+.BR home_etc_path(3),
+.BR get_home_etc(3),
+.BR get_home_etc_static(3)
+    
+.SH LICENSE
+The HOME-ETC library is distributed under the terms of GNU LGPL.
+This documentation is distributed under the terms of GNU FDL.
+       
+.SH AUTHOR
+Pawel Wilk <siefca@gnu.org>
+There was also a lot of other people, who have contributed to this code
+and/or helped with patching applications. See the AUTHORS and the CONTRIBUTORS files.
+
