@@ -81,7 +81,7 @@ the function:
 .sp
 .BI "home_etc_path("""/home/users/siefca/.muttrc """, " 1 );
 .sp    
-or a pair:
+or:
 .sp
 .BI "home_etc_expand_tilde(" 1 );
 .BI "home_etc_path("""~/.muttrc """, " 1 );
@@ -224,14 +224,22 @@ Be ware of setting \fBuse_env\fP to non-zero for deamons
 which can inherit the environment variables at start and
 are not setting it again when changing the UID/EUID. These
 are daemons, that (so-called) aren't touching users' environment.
-In such cases you may get a false results.
+In such cases you may get false results.
 
 The static buffer has a length of a MAXPATHLEN bytes. In case of
 a larger strings the NULL is generated while parsing.
 
-If you want the very current informations and need to refresh
-the cache used to store the \fBHOME_ETC\fP pathname use \fBhome_etc_reset(3)\fP function
-just before \fBhome_etc_path(3)\fP or its wrappers.
+If you want to get the very current informations
+and need to refresh the cache used to store the \fBHOME_ETC\fP
+pathname use \fBhome_etc_reset(3)\fP function just before
+\fBhome_etc_path(3)\fP or its wrappers.
+
+The resulting path may be canonized (absolutized), but may be not,
+or may be canonized partially. It depends on how big portion
+of the given pathname the function was able to resolve by accessing
+the filesystem. If you want your resulting path to be fully canonized
+you will probably have to use the \fBpath_canonize(3)\fP function
+to postprocess the result.
 
 .SH "SEE ALSO"
 .BR home_etc(3),
@@ -239,6 +247,7 @@ just before \fBhome_etc_path(3)\fP or its wrappers.
 .BR home_etc_reset(3),
 .BR get_home_etc(3),
 .BR get_home_etc_static(3),
+.BR path_canonize(3),
 .BR chdir(2),
 .BR getcwd(3)
 

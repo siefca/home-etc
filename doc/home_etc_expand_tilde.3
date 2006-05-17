@@ -31,8 +31,11 @@ is also translated into user's home directory name, but only if the whole parsed
 path contains only that one character.
 
 The way to obtain user's home directory depends on method choosen while
-invoking \fBhome_etc_path(3)\fP (see \fIuse_env\fP description in the
-manual).
+invoking \fBhome_etc_path(3)\fP. The \fIuse_env\fP is a swich which
+determines the method to obtain user's home directory. If it's set
+to 1 home directory is obtained using \fIHOME\fP environment variable.
+If it is set to 0, then the home directory is taken from system
+by calling \fBgetpwuid(3)\fP.
 
 Once invoked this function keeps last setting memorized. The parsing
 by default is in state DISABLED.
@@ -62,6 +65,7 @@ will return
 .BR home_etc_path(3),
 .BR get_home_etc(3),
 .BR get_home_etc_static(3)
+.BR getpwuid(3)
     
 .SH LICENSE
 The HOME-ETC library is distributed under the terms of GNU LGPL.

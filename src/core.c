@@ -180,7 +180,7 @@ const char *canonize_path(const char *path, char use_env, char expand_tilde)
   /* and unresolvable part of the pathname                    */
 
   /* rebirth our paths by eliminating zeroes from prev. oper. */
-  p = pbuff;
+  p = q;
   while(p < pbuff+s)
     {
       if(*p == '\0')

@@ -18,13 +18,13 @@ int main(int argc, char *argv[])
 {
   int er = 0;
   const char *r = NULL;
-  const char **p = NULL;
+  char **p = NULL;
   
   _HE_LIKE_TILDE;
   
   if (argc < 2)
     {
-      fprintf(stderr, "usage: realpath path [...]\n");
+      fprintf(stderr, "usage: realpath pathname [pathname ...]\n");
       exit(1);
     }
 
