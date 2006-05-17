@@ -1,4 +1,4 @@
-.\" Copyright (c) 2003 by Pawe³ Wilk <siefca@gnu.org>
+.\" Copyright (c) 2003-2006 by Pawe³ Wilk <siefca@gnu.org>
 .\"
 .\" Permission is granted to copy, distribute and/or modify this document
 .\" under the terms of the GNU Free Documentation License, Version 1.2
@@ -30,10 +30,15 @@ to the result of \fBget_home_etc_static(3)\fP. It tries to canonize
 as much parts of the directories as it is possible in:
 pathname and (obtained before) home directory.
 
+If \fBhome_etc_expand_tile(3)\fP has been used before to enable
+tilde-slash pair parsing, the function treats \fI~/\fP as if it
+was user's home directory path (in fact it internally replaces it first
+and then goes to re-parse it, to make sure that the home directory is ok).
+
 Substitution is made for the found string of the user's home directory,
 which is searched in the pathname. The home-dir part of the string
 becomes the value of the \fBHOME_ETC\fP.
-    
+
 The use_env is simply passed to the \fBget_home_etc_static(3)\fP.
     
 The function iterates using \fBchdir(2)\fP and \fBgetcwd(3)\fP to canonize parts
@@ -72,8 +77,14 @@ and HOME_ETC=\fI/usr/siefca-configs\fP
 .sp    
 the function:
 .sp
-.BI "home_etc_path(" /home/users/siefca/.muttrc ", " 1 );
+.BI "home_etc_path("""/home/users/siefca/.muttrc """, " 1 );
 .sp    
+or a pair:
+.sp
+.BI "home_etc_expand_tilde(" 1 );
+.BI "home_etc_path("""~/.muttrc """, " 1 );
+.sp    
+
 will return
 .I /usr/siefca-configs/.muttrc
 .LP
@@ -222,6 +233,7 @@ just before \fBhome_etc_path(3)\fP or its wrappers.
 
 .SH "SEE ALSO"
 .BR home_etc(3),
+.BR home_etc_expand_tile(3),
 .BR home_etc_reset(3),
 .BR get_home_etc(3),
 .BR get_home_etc_static(3),

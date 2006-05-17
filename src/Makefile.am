@@ -22,7 +22,8 @@ TESTS=test
 examples = \
 						example.c \
 						example2.c \
-						example3.c
+						example3.c \
+						example4.c
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(examplesdir)

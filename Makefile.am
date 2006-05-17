@@ -11,8 +11,8 @@ rpm:
 publish:
 	$(MAKE) clean
 	$(MAKE) dist
-	scp $(PACKAGE)-$(VERSION).tar.gz siefca@ep09.pld.kernel.pl:~/ftp-pld/distfiles
-	ssh siefca@ep09.pld.kernel.pl 'chmod a+r ~/ftp-pld/distfiles/*'
+	scp $(PACKAGE)-$(VERSION).tar.gz siefca@ep09.pld-linux.org:~/ftp/distfiles
+	ssh siefca@ep09.pld-linux.org 'chmod a+r ~/ftp/distfiles/*'
 	cd ../SPECS && cvs up $(PACKAGE).spec
 	cp -f ../SPECS/$(PACKAGE).spec ../SPECS/$(PACKAGE).spec.bak
 	cp -f ./$(PACKAGE).spec ../SPECS/$(PACKAGE).spec

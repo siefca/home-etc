@@ -2,6 +2,7 @@
 #include <sys/types.h>
 
 #include <sys/param.h>
+
 #include "home_etc.h"
 
 int main (int argc, char *argv[])
@@ -12,8 +13,10 @@ int main (int argc, char *argv[])
 		      "/home/users/siefca/.muttrc", "/home/users/siefca/.muttrc/xxx",
 		      "/home/users/siefca/.a", "/home/../home/users/siefca/hmm",
 		      "/home/../home/users/siefca/hmm/", "/home/users/siefca/.muttrc/",
-		      "tmp/.muttrc", "tmp/.muttrc/"
+		      "tmp/.muttrc", "tmp/.muttrc/", "~/.muttrc", "~/muttrc/", "//.muttrc", "~noexpand", "~", "~/", "/////"
   };
+
+  home_etc_expand_tilde(1);
 
   printf("\nHOME_ETC:\t%s\n\n", get_home_etc(1));
 

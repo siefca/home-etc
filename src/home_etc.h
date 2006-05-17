@@ -1,6 +1,6 @@
 /* home-etc library: obtain user-decided configuration directory
  *
- * Copyright (C) 2003 Pawel Wilk <siefca@gnu.org>,
+ * Copyright (C) 2003-2006 Pawel Wilk <siefca@gnu.org>,
  *
  * This is free software; see the GNU Lesser General Public License version 2
  * or later for copying conditions.  There is NO warranty.
@@ -24,6 +24,9 @@ const char *get_home_etc_static_n(char use_env);
 
 const char *home_etc_path(const char *pathname, char use_env);
 
+/* expand-tilde enable or disable */
+void home_etc_expand_tilde(const char);
+
 /* a sweet wrappers */
 
 const char *_HE(const char *pathname);
@@ -46,6 +49,9 @@ void home_etc_reset();
 # define ___HE _HE
 # define ___HEdir _HEdir
 #endif
+
+#define _HE_LIKE_TILDE home_etc_expand_tilde(1)
+#define _HE_UNLIKE_TILDE home_etc_expand_tilde(0)
 
 #endif
 

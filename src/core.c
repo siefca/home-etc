@@ -1,11 +1,13 @@
 /* home-etc library: obtain user-decided configuration directory
  *
- * Copyright (C) 2003 Pawel Wilk <siefca@gnu.org>,
+ * Copyright (C) 2003-2006 Pawel Wilk <siefca@gnu.org>,
  *
  * This is free software; see the GNU Lesser General Public License version 2
  * or later for copying conditions.  There is NO warranty.
  *
  */
+
+#include <stdio.h>
 
 #include "includes.h"
 #include "core.h"
@@ -45,85 +47,172 @@ const char *compare_paths(const char *a, const char *b)
 
 /*********************************************************************/
 
-inline static int canonize_dir(char *path, size_t s)
+inline static int absolutize_dir(char *path, size_t s)
 {
-  char buff[MAXPATHLEN];
-    
-  if (! getcwd(buff, sizeof(buff)-2))
-    return -1;
-  buff[MAXPATHLEN-1] = '\0';
+  /* change dir to path */
   if (chdir(path) == -1)
     return -1;
+
+  /* get the result */
   if (! getcwd(path, s))
     {
-      chdir(buff);
       return -1;
     }
 
-  if (*path == '/' && *(path+1) == '\0')
-    *path = '\0';
-
-  chdir(buff);
   return 0;
 }
 
 /*********************************************************************/
 
-const char *canonize_path(const char *path)
+const char *canonize_path(const char *path, char use_env, char expand_tilde)
 {
-  int counter = 254;
+  char trailslash = 0;
+  int counter = 256;
   size_t s;
-  char *p = NULL, *q = NULL;
+  char *p = NULL;
+  char *q = NULL;
+  const char *home_d = NULL;
+  static char pbuff[MAXPATHLEN+2];
   char buff[MAXPATHLEN];
-  static char pathbuf[MAXPATHLEN];
+  char intbuf[MAXPATHLEN];
+  char prev[MAXPATHLEN];
 
-  bzero(buff, sizeof(buff));
-  bzero(pathbuf, sizeof(pathbuf));
-
-  s = strlen(path);
-  if (s > sizeof(buff) - 2 || s <= 0)
+  /* memorize CWD */
+  prev[MAXPATHLEN-1] = '\0';
+  if (! getcwd(prev, sizeof(prev)))
     return NULL;
 
-  if (*path != '/')
+  s = strlen(path);
+  if (s > 0 && *(path+s-1) == '/')
+    trailslash = 1;
+
+  bzero(buff, sizeof(buff));
+  bzero(pbuff, sizeof(pbuff));
+
+  /* if we have leading tilde-slash */
+  if (expand_tilde && *path == '~' && *(path+1) == '/')
     {
-      if (! getcwd(buff, sizeof(buff)))
-	return NULL;
-      s += strlen(buff);
-      if (s > sizeof(pathbuf) - 2)
-	return NULL;
-      strcpy(pathbuf, buff);
-      *buff = '\0';
+      home_d = obtain_home_dir(use_env);
+      if (home_d == NULL ||
+          strlen(home_d) + strlen(path) > sizeof(buff)-2)
+        {
+	  chdir(prev);
+          return NULL;
+        }
+      strcpy(buff, home_d);      /* strcpy checked */
+      strcat(buff, path+1);      /* strcat checked */
+    }
+    else /* just copy path into buffer */
+    {
+      if (strlen(path) > sizeof(buff)-2)
+        {
+	  chdir(prev);
+	  return NULL;
+        }
+      strcpy(buff, path); /* strcpy checked */
     }
 
-  strncat(buff, path, sizeof(buff)-1);
-  p = buff;
-  if (*p == '/') p++;
-  s = strlen(pathbuf) - 2;
-
-  while (s > 0 && counter > 0 && (q = strchr(p, (int)'/')))
+  /* if we (still) have relative pathname */
+  if (*buff != '/' && *buff != '\0')
     {
-      if (*(q+1) != '\0')
-	*q = '\0';
-      s -= strlen(p) + 1;
-      if (s <= 0) return NULL;
-      strcat(pathbuf, "/");
-      strcat(pathbuf, p);
-      p = q+1;
-      if (canonize_dir(pathbuf, s) == -1)
-	break;
-      counter--;
+      intbuf[sizeof(intbuf)-1] = '\0';
+      if (!getcwd(intbuf, (sizeof(intbuf) - 2)) ||
+	   strlen(intbuf) + strlen(buff) > sizeof(pbuff) - 2)
+        {
+	  chdir(prev);
+	  return NULL;
+	}
+      strcpy(pbuff, intbuf);/* strcpy checked */
+      strcat(pbuff, "/");   /* strcpy checked */
+      strcat(pbuff, buff);  /* strcat checked */
     }
-  if (s <= 0 || counter <= 0) return NULL;
-    
-  if (p && *p != '\0')
+  else /* if we have absolute pathname */
     {
-      s = sizeof(pathbuf) - strlen(pathbuf) - 2;
-      if (strlen(p) > s) return NULL;
-      strcat(pathbuf, "/");
-      strcat(pathbuf, p);
+      if (strlen(buff) > sizeof(pbuff)-2)
+	{
+	  chdir(prev);
+	  return NULL;
+	}
+      strcpy(pbuff, buff);   /* strcpy checked */
     }
 
-  return pathbuf;
+  /* remember the original size */
+  s = strlen(pbuff);
+
+  /* travel from last slash to first and try to enter the dir */
+  /* to split path into 2 pieces: resolvable and unresolvable */
+  q = NULL;
+  while((q = strrchr(pbuff, (int)'/')) && counter--
+        && chdir(pbuff) == -1)
+    *q = '\0';
+
+  if(counter <= 0) /* do we have strange traversal loops?     */
+    {
+      chdir(prev);
+      return NULL;
+    }
+  if (q == NULL || q >= pbuff+s)   /* pure resolvable path?  */
+    q = pbuff+s;                   /* point it to \0 string  */
+  else
+    q += strlen(q);
+  /* q pointer now keeps the borderline between resolvable    */
+  /* and unresolvable part of the pathname                    */
+
+  /* rebirth our paths by eliminating zeroes from prev. oper. */
+  p = pbuff;
+  while(p < pbuff+s)
+    {
+      if(*p == '\0')
+	*p = '/';
+      p++;
+    }
+
+  /* keep unresolvable part of the path in intbuf */
+  if(q && *q != '\0')
+    {
+      if(strlen(q) > sizeof(intbuf)-2)
+        {
+          chdir(prev);
+          return NULL;
+        }
+      strcpy(intbuf, q); /* strcpy checked */
+      *q = '\0';         /* keep split */
+    }
+  else
+    *intbuf = '\0';
+
+  /* make the buffered, resolvable path absolute */
+  if(absolutize_dir(pbuff, sizeof(pbuff)-1) == -1)
+    {
+      chdir(prev);
+      return NULL;
+    }
+
+  if(intbuf && *intbuf != '\0')
+    {
+      /* attach the unresolvable part to the absolutized part */
+      if(strlen(pbuff)+strlen(intbuf) > sizeof(pbuff)-2)
+        {
+          chdir(prev);
+          return NULL;
+        }
+      strcat(pbuff, intbuf);   /* strcat checked */
+    }
+
+  s = strlen(pbuff);
+  if (s > 0)
+    {
+      if(trailslash && (*(pbuff+s-1) != '/') && s < sizeof(pbuff)-2)
+        {
+	  *(pbuff+s) = '/';
+	  *(pbuff+s+1) = '\0';
+	}
+      if(!trailslash && (*(pbuff+s-1) == '/'))
+        *(pbuff+s) = '\0';
+    }
+
+  chdir(prev);
+  return pbuff;
 }
 
 /*********************************************************************/
@@ -148,7 +237,7 @@ const char *obtain_home_dir(char use_env)
     {
       return pw->pw_dir;
     }
-    
+
   return NULL;
 }
 

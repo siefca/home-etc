@@ -1,6 +1,6 @@
 /* home-etc library: obtain user-decided configuration directory
  *
- * Copyright (C) 2003 Pawel Wilk <siefca@gnu.org>,
+ * Copyright (C) 2003-2006 Pawel Wilk <siefca@gnu.org>,
  *
  * This is free software; see the GNU Lesser General Public License version 2
  * or later for copying conditions.  There is NO warranty.
@@ -12,6 +12,7 @@
 #include "core.h"
 #include "home_etc.h"
 
+static char h_etc_expand_tilde = 0;
 static char h_etc_path[MAXPATHLEN];
 
 /****************************************************************/
@@ -25,14 +26,14 @@ const char *get_home_etc(char use_env)
   char home_dir[MAXPATHLEN];
 
   if (use_env)
-    p = getenv(ENV_VAR); /* try the environment */
+    p = getenv(ENV_VAR); /* user's HOME - try the environment */
   if (p != NULL)
     {
       bzero(h_etc_path, sizeof(h_etc_path));
       strncpy(h_etc_path, p, (sizeof(h_etc_path)-2));
       return h_etc_path;
     }
-  else /* try the file */
+  else			/* user's HOME - try the file */
     {
       p = obtain_home_dir(use_env);
       if (p != NULL)
@@ -111,12 +112,12 @@ const char *home_etc_path(const char *path, char use_env)
 
   /* absolutize home directory name */
   strncpy(home_dir, p, sizeof(home_dir)-1);
-  p = canonize_path(home_dir);
+  p = canonize_path(home_dir, use_env, 0);
   if (p == NULL || *p == '\0')
     return NULL;
 
   /* absolutize given pathname */
-  p = canonize_path(path);
+  p = canonize_path(path, use_env, h_etc_expand_tilde);
   if (p == NULL || *p == '\0')
     return NULL;
 
@@ -206,6 +207,16 @@ void home_etc_reset()
 {
   *h_etc_path = '\0';
     
+  return;
+}
+
+/****************************************************************/
+/* cleans cached HOME_ETC directory location string */
+
+void home_etc_expand_tilde(const char expand_tilde)
+{
+  h_etc_expand_tilde = expand_tilde;
+
   return;
 }
 

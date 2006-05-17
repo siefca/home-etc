@@ -1,4 +1,4 @@
-AC_INIT([home-etc],[1.0.9],[siefca/at/gnu.org])
+AC_INIT([home-etc],[1.2.0],[siefca/at/gnu.org])
 AC_CONFIG_HEADER([config.h])
 PACKAGE=$PACKAGE_NAME
 VERSION=$PACKAGE_VERSION
@@ -11,7 +11,7 @@ AC_SUBST(SUMMARY)
 
 dnl Checks for Libtool.
 LT_CURRENT=1
-LT_REVISION=0
+LT_REVISION=2
 LT_AGE=0
 
 AM_PROG_LIBTOOL
