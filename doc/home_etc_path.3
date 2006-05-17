@@ -34,6 +34,8 @@ If \fBhome_etc_expand_tile(3)\fP has been used before to enable
 tilde-slash pair parsing, the function treats \fI~/\fP as if it
 was user's home directory path (in fact it internally replaces it first
 and then goes to re-parse it, to make sure that the home directory is ok).
+Additionally, the \fI~\fP character is also translated into user's home
+directory name, but only if the whole parsed path contains only that one character.
 
 Substitution is made for the found string of the user's home directory,
 which is searched in the pathname. The home-dir part of the string
@@ -42,7 +44,7 @@ becomes the value of the \fBHOME_ETC\fP.
 The use_env is simply passed to the \fBget_home_etc_static(3)\fP.
     
 The function iterates using \fBchdir(2)\fP and \fBgetcwd(3)\fP to canonize parts
-of pathnames.
+of the given pathname.
     
 \fB_HE\fP is a wrapper for this function, which never returns NULL, since NULL
 wasn't given as an argument. It calls \fBhome_etc_path(3)\fP and in case

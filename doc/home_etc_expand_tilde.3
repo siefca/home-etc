@@ -8,7 +8,7 @@
 .\" Free Documentation License"; if it's not, contact Free Software Foundation, Inc.
 .\" 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA to obtain one.
 .\"
-.TH home_etc_reset "3" "PLD Linux/GNU" "December 2003" "HOME-ETC"
+.TH home_etc_reset "3" "PLD Linux/GNU" "May 2006" "HOME-ETC"
 .SH NAME
 home_etc_expand_tilde \- toggle tilde-slash pair parsing
 .SH SYNOPSIS
@@ -26,7 +26,9 @@ tilde & slash parsing, while processing pathnames by \fBhome_etc_path(3)\fP.
 It takes one argument, which should be set to 0 to disable and to non-zero to
 enable parsing of a leading \fI~/\fP string found in path. When parsing
 is enabled, the path is expanded by replacing \fI~/\fP by user's home directory
-pathname while invoking internal routines.
+pathname while invoking internal routines. Additionally, the \fI~\fP character
+is also translated into user's home directory name, but only if the whole parsed
+path contains only that one character.
 
 The way to obtain user's home directory depends on method choosen while
 invoking \fBhome_etc_path(3)\fP (see \fIuse_env\fP description in the
