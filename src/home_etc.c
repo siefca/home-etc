@@ -240,6 +240,14 @@ void home_etc_expand_tilde(const char expand_tilde)
   return;
 }
 
+/****************************************************************/
+/* canonize pathname as it is possible */
+
+const char *path_canonize(const char *path, char use_env)
+{
+    return canonize_path(path, use_env, h_etc_expand_tilde);
+}
+
 /*
   Local Variables:
   mode: c

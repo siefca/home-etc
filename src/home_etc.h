@@ -27,6 +27,9 @@ const char *home_etc_path(const char *pathname, char use_env);
 /* expand-tilde enable or disable */
 void home_etc_expand_tilde(const char);
 
+/* other helpful functions for you to use */
+const char *path_canonize(const char *path, char use_env);
+
 /* a sweet wrappers */
 
 const char *_HE(const char *pathname);

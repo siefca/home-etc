@@ -10,9 +10,14 @@ libhome_etc_la_SOURCES = \
 						 home_etc.c
 include_HEADERS = home_etc.h
 
+realpath_SOURCES = realpath.c
+
 noinst_PROGRAMS = test example example2 example3
 
+bin_PROGRAMS = realpath
+
 test_LDADD = libhome_etc.la
+realpath_LDADD = libhome_etc.la
 example_LDADD = libhome_etc.la
 example2_LDADD = libhome_etc.la
 example3_LDADD = libhome_etc.la
