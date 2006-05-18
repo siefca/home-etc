@@ -15,7 +15,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <home_etc.h>
+#include "home_etc.h"
 
 int main(int argc, char *argv[])
 {
@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 
   _HE_LIKE_TILDE;
   p = _HE("~/.myrc");
-  printf("original path: %s\n", p);
+  printf("original path: ~/.myrc\n");
   printf("modified path: %s\n", p);
 
   exit(0);

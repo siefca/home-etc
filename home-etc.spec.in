@@ -1,4 +1,4 @@
-# $Revision: 1.5 $, $Date: 2006/05/17 01:50:04 $
+# $Revision: 1.6 $, $Date: 2006/05/18 00:09:08 $
 Summary:	HOME-ETC support programs and scripts
 Summary(pl):	Skrypty i programy zapewniaj±ce wsparcie dla HOME-ETC
 Name:		home-etc
@@ -129,6 +129,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS CONTRIBUTORS README doc/HOME-ETC.pl.txt
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) /etc/profile.d/home-etc.*sh
+%{_mandir}/man1/*
 /etc/skel/.home_etc
 
 %files lib
@@ -157,6 +158,11 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: home-etc.spec.in,v $
+Revision 1.6  2006/05/18 00:09:08  siefca
+- sigsegv located and fixed at realpath.c
+- fixed automake files for manual pages and examples
+- spec prepared for manual page realpath.1
+
 Revision 1.5  2006/05/17 01:50:04  siefca
 - canonize_path() rewritten from scratch
 - added tilde handling while parsing pathnames

@@ -30,7 +30,7 @@
 
 #ifdef HAVE_HOME_ETC_H
 # define _HE_DAEMON
-# include <home_etc.h>
+# include "home_etc.h"
 # define __HE(x) ___HE(x)
 #else
 # define __HE(x) x

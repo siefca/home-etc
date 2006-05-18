@@ -12,7 +12,7 @@ include_HEADERS = home_etc.h
 
 realpath_SOURCES = realpath.c
 
-noinst_PROGRAMS = test example example2 example3
+noinst_PROGRAMS = test example example2 example3 example4
 
 bin_PROGRAMS = realpath
 
@@ -21,6 +21,7 @@ realpath_LDADD = libhome_etc.la
 example_LDADD = libhome_etc.la
 example2_LDADD = libhome_etc.la
 example3_LDADD = libhome_etc.la
+example4_LDADD = libhome_etc.la
 
 TESTS=test
 
