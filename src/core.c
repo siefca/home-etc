@@ -47,14 +47,14 @@ const char *compare_paths(const char *a, const char *b)
 
 /*********************************************************************/
 
-inline static void fix_trailslash(char *p, char trailslash)
+inline static void fix_trailslash(char *p, size_t psize, char trailslash)
 {
   size_t s;
 
   s = strlen(p);
   if (s > 0)
     {
-      if(trailslash && (*(p+s-1) != '/') && s < sizeof(p)-2)
+       if(trailslash && (*(p+s-1) != '/') && s < psize-2)
         {
           *(p+s) = '/';
           *(p+s+1) = '\0';
@@ -64,6 +64,32 @@ inline static void fix_trailslash(char *p, char trailslash)
     }
 
   return;
+}
+
+/*********************************************************************/
+
+inline static void rem_dslash(char *p)
+{
+  char s = 0;
+  char *q, *b;
+
+  /* remove doubled slashes */
+  q = b = p;
+  while (*q != '\0')
+    {
+      if (*q == '/' && *(q+1) == '/' && (s=1))
+        while (*(q+1) == '/') q++;
+      else
+        {
+          if (s)
+            {
+              *b = *q;
+            }
+        }
+      q++; b++;
+    }
+  if (q > b)
+    *b = '\0';
 }
 
 /*********************************************************************/
@@ -160,7 +186,7 @@ char *canonize_path(const char *path, char use_env, char expand_tilde)
 	  return NULL;
 	}
       strcpy(pbuff, intbuf);/* strcpy checked */
-      strcat(pbuff, "/");   /* strcpy checked */
+      strcat(pbuff, "/");   /* strcat checked */
       strcat(pbuff, buff);  /* strcat checked */
     }
   else /* or if we have absolute pathname */
@@ -183,8 +209,10 @@ char *canonize_path(const char *path, char use_env, char expand_tilde)
       /* make it absolute and return fast */
       if(absolutize_dir(pbuff, sizeof(pbuff)-1) == -1)
 	return NULL;
-      /* add or remove trailing slash as memorized before */
-      fix_trailslash(pbuff, trailslash);
+      if(*pbuff == '/' && *(pbuff+1) == '\0')
+	return pbuff;
+      rem_dslash(pbuff);
+      fix_trailslash(pbuff, sizeof(buff), trailslash);
       return pbuff;
     }
 
@@ -214,8 +242,9 @@ char *canonize_path(const char *path, char use_env, char expand_tilde)
   /* do we have pure unresolvable path?   */
   if (q == NULL)
     {
+      rem_dslash(pbuff);
       /* add or remove trailing slash as memorized before */
-      fix_trailslash(pbuff, trailslash);
+      fix_trailslash(pbuff, sizeof(pbuff), trailslash);
       /* return fast */
       return pbuff;
     }
@@ -256,8 +285,12 @@ char *canonize_path(const char *path, char use_env, char expand_tilde)
       strcat(pbuff, intbuf);   /* strcat checked */
     }
 
+  if(*pbuff == '/' && *(pbuff+1) == '\0')
+    return pbuff;
+
+  rem_dslash(pbuff);
   /* add or remove trailing slash as memorized before */
-  fix_trailslash(pbuff, trailslash);
+  fix_trailslash(pbuff, sizeof(pbuff), trailslash);
 
   /* go back to the directory we were and return pointer to buffer */
   chdir(prev);

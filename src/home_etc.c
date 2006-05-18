@@ -255,28 +255,10 @@ const char *path_canonize(const char *path, char use_env)
   if (p == NULL)
     return NULL;
 
-  /* remove doubled slashes */
-  q = b = p;
-  while (*q != '\0')
-    {
-      if (*q == '/' && *(q+1) == '/' && (s=1))
-        while (*(q+1) == '/') q++;
-      else
-        {
-	  if (s)
-            {
-              *b = *q;
-            }
-        }
-      q++; b++;
-    }
-  if (q > b)
-    *b = '\0';
-
   /* check whether the trailing slash should be removed */
-  s = strlen(p);
-  if (s > 0 && *(p+s-1) == '/' && !isdir(p))
-    *(p+s-1) = '\0';
+//  s = strlen(p);
+  //if (s > 0 && *(p+s-1) == '/' && !isdir(p))
+    //*(p+s-1) = '\0';
 
   r = (const char *) p;
   return r;
