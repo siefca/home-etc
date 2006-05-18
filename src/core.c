@@ -96,6 +96,13 @@ inline static void rem_dslash(char *p)
 
 inline static int absolutize_dir(char *path, size_t s)
 {
+  char prev[MAXPATHLEN];
+
+  /* memorize CWD */
+  prev[MAXPATHLEN-1] = '\0';
+  if (! getcwd(prev, sizeof(prev)))
+    return -1;
+
   /* change dir to path */
   if (chdir(path) == -1)
     return -1;
@@ -103,9 +110,11 @@ inline static int absolutize_dir(char *path, size_t s)
   /* get the result */
   if (! getcwd(path, s))
     {
+      chdir(prev);
       return -1;
     }
 
+  chdir(prev);
   return 0;
 }
 
@@ -121,12 +130,6 @@ char *canonize_path(const char *path, char use_env, char expand_tilde)
   static char pbuff[MAXPATHLEN+2];
   char buff[MAXPATHLEN];
   char intbuf[MAXPATHLEN];
-  char prev[MAXPATHLEN];
-
-  /* memorize CWD */
-  prev[MAXPATHLEN-1] = '\0';
-  if (! getcwd(prev, sizeof(prev)))
-    return NULL;
 
   /* memorize trailing slash */
   s = strlen(path);
@@ -142,10 +145,7 @@ char *canonize_path(const char *path, char use_env, char expand_tilde)
       home_d = obtain_home_dir(use_env);
       if (home_d == NULL ||
           strlen(home_d) + strlen(path) > sizeof(buff)-2)
-        {
-	  chdir(prev);
-          return NULL;
-        }
+        return NULL;
     }
 
   /* if we have leading tilde-slash or just tilde */
@@ -153,12 +153,8 @@ char *canonize_path(const char *path, char use_env, char expand_tilde)
       (*(path+1) == '/' || *(path+1) == '\0') )
     {
       home_d = obtain_home_dir(use_env);
-      if (home_d == NULL ||
-          strlen(home_d) + strlen(path) > sizeof(buff)-2)
-        {
-	  chdir(prev);
-          return NULL;
-        }
+      if (home_d == NULL || strlen(home_d) + strlen(path) > sizeof(buff)-2)
+        return NULL;
       strcpy(buff, home_d);      /* strcpy checked */
       if (*(path+1) != '\0')
         strcat(buff, path+1);    /* strcat checked */
@@ -168,10 +164,7 @@ char *canonize_path(const char *path, char use_env, char expand_tilde)
     else /* or just copy path into buffer */
     {
       if (strlen(path) > sizeof(buff)-2)
-        {
-	  chdir(prev);
-	  return NULL;
-        }
+        return NULL;
       strcpy(buff, path); /* strcpy checked */
     }
 
@@ -181,10 +174,7 @@ char *canonize_path(const char *path, char use_env, char expand_tilde)
       intbuf[sizeof(intbuf)-1] = '\0';
       if (!getcwd(intbuf, (sizeof(intbuf) - 2)) ||
 	   strlen(intbuf) + strlen(buff) > sizeof(pbuff) - 2)
-        {
-	  chdir(prev);
-	  return NULL;
-	}
+	return NULL;
       strcpy(pbuff, intbuf);/* strcpy checked */
       strcat(pbuff, "/");   /* strcat checked */
       strcat(pbuff, buff);  /* strcat checked */
@@ -192,10 +182,7 @@ char *canonize_path(const char *path, char use_env, char expand_tilde)
   else /* or if we have absolute pathname */
     {
       if (strlen(buff) > sizeof(pbuff)-2)
-	{
-	  chdir(prev);
-	  return NULL;
-	}
+	return NULL;
       strcpy(pbuff, buff);   /* strcpy checked */
     }
 
@@ -203,9 +190,8 @@ char *canonize_path(const char *path, char use_env, char expand_tilde)
   s = strlen(pbuff);
 
   /* do we have pure resolvable path which is a dir? */
-  if (chdir(pbuff) != -1)
+  if (isdir(pbuff))
   {
-      chdir(prev);
       /* make it absolute and return fast */
       if(absolutize_dir(pbuff, sizeof(pbuff)-1) == -1)
 	return NULL;
@@ -219,7 +205,7 @@ char *canonize_path(const char *path, char use_env, char expand_tilde)
   /* travel from last slash to first and try to enter the dir */
   /* to split path into 2 pieces: resolvable and unresolvable */
   q = NULL;
-  while((q = strrchr(pbuff, (int)'/')) && chdir(pbuff) == -1)
+  while((q = strrchr(pbuff, (int)'/')) && !isdir(pbuff))
     *q = '\0';
 
   /* do we have pure unresolvable path?   */
@@ -256,10 +242,7 @@ char *canonize_path(const char *path, char use_env, char expand_tilde)
   if(q && *q != '\0')
     {
       if(strlen(q) > sizeof(intbuf)-2)
-        {
-          chdir(prev);
-          return NULL;
-        }
+        return NULL;
       strcpy(intbuf, q); /* strcpy checked */
       *q = '\0';         /* keep split */
     }
@@ -268,20 +251,14 @@ char *canonize_path(const char *path, char use_env, char expand_tilde)
 
   /* make the buffered, resolvable path absolute */
   if(absolutize_dir(pbuff, sizeof(pbuff)-1) == -1)
-    {
-      chdir(prev);
-      return NULL;
-    }
+    return NULL;
 
   /* do we have unresolvable part of path? */
   if(intbuf && *intbuf != '\0')
     {
       /* attach the unresolvable part to the absolutized part */
       if(strlen(pbuff)+strlen(intbuf) > sizeof(pbuff)-2)
-        {
-          chdir(prev);
-          return NULL;
-        }
+        return NULL;
       strcat(pbuff, intbuf);   /* strcat checked */
     }
 
@@ -292,8 +269,6 @@ char *canonize_path(const char *path, char use_env, char expand_tilde)
   /* add or remove trailing slash as memorized before */
   fix_trailslash(pbuff, sizeof(pbuff), trailslash);
 
-  /* go back to the directory we were and return pointer to buffer */
-  chdir(prev);
   return pbuff;
 }
 

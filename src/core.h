@@ -7,16 +7,13 @@
  *
  */
 
-#include <sys/param.h>
-#include <sys/types.h>
+#include "includes.h"
 
 #ifndef	__CORE_H
 #define	__CORE_H
 
 #define	ENV_VAR		"HOME_ETC"
 #define	HELPER_FILENAME	".home_etc"
-
-extern int errno;
 
 const char *obtain_home_dir(char use_env);
 const char *get_home_etc_core(char use_env);
@@ -27,16 +24,11 @@ const char *compare_paths(const char *a, const char *b);
 
 inline static int isdir(const char *path)
 {
-  char prev[MAXPATHLEN];
+  struct stat statbuf;
 
-  prev[MAXPATHLEN-1] = '\0';
-  if (! getcwd(prev, sizeof(prev)))
+  if (stat(path, &statbuf) == -1 || !(S_ISDIR(statbuf.st_mode)))
     return 0;
 
-  if (chdir(path) == -1 && errno == ENOTDIR)
-    return 0;
-
-  chdir(prev);
   return 1;
 }
 
