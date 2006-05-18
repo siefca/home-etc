@@ -47,6 +47,27 @@ const char *compare_paths(const char *a, const char *b)
 
 /*********************************************************************/
 
+inline static void fix_trailslash(char *p, char trailslash)
+{
+  size_t s;
+
+  s = strlen(p);
+  if (s > 0)
+    {
+      if(trailslash && (*(p+s-1) != '/') && s < sizeof(p)-2)
+        {
+          *(p+s) = '/';
+          *(p+s+1) = '\0';
+        }
+      if(!trailslash && (*(p+s-1) == '/'))
+         *(p+s-1) = '\0';
+    }
+
+  return;
+}
+
+/*********************************************************************/
+
 inline static int absolutize_dir(char *path, size_t s)
 {
   /* change dir to path */
@@ -67,7 +88,6 @@ inline static int absolutize_dir(char *path, size_t s)
 char *canonize_path(const char *path, char use_env, char expand_tilde)
 {
   char trailslash = 0;
-  int counter = 256;
   size_t s;
   char *p = NULL;
   char *q = NULL;
@@ -156,37 +176,52 @@ char *canonize_path(const char *path, char use_env, char expand_tilde)
   /* remember the original size */
   s = strlen(pbuff);
 
+  /* do we have pure resolvable path which is a dir? */
+  if (chdir(pbuff) != -1)
+  {
+      chdir(prev);
+      /* make it absolute and return fast */
+      if(absolutize_dir(pbuff, sizeof(pbuff)-1) == -1)
+	return NULL;
+      /* add or remove trailing slash as memorized before */
+      fix_trailslash(pbuff, trailslash);
+      return pbuff;
+    }
+
   /* travel from last slash to first and try to enter the dir */
   /* to split path into 2 pieces: resolvable and unresolvable */
   q = NULL;
-  while((q = strrchr(pbuff, (int)'/')) && counter--
-        && chdir(pbuff) == -1)
+  while((q = strrchr(pbuff, (int)'/')) && chdir(pbuff) == -1)
     *q = '\0';
 
-  /* do we have strange traversal loops? */
-  if(counter <= 0)
+  /* do we have pure unresolvable path?   */
+  if (q == NULL)
+      p = pbuff;
+  else
     {
-      chdir(prev);
-      return NULL;
+      q += strlen(q);                /* point q to last char   */
+      p = q;
     }
 
-  /* do we have pure resolvable path? */
-  if (q == NULL || q >= pbuff+s)
-    q = pbuff+s;                   /* point q to \0 string  */
-  else
-    q += strlen(q);                /* point q to last char  */
-
-  /* q pointer now keeps the borderline between resolvable    */
-  /* and unresolvable part of the pathname                    */
-
   /* rebirth our paths by eliminating zeroes from prev. oper. */
-  p = q;
   while(p < pbuff+s)
     {
       if(*p == '\0')
-	*p = '/';
+        *p = '/';
       p++;
     }
+
+  /* do we have pure unresolvable path?   */
+  if (q == NULL)
+    {
+      /* add or remove trailing slash as memorized before */
+      fix_trailslash(pbuff, trailslash);
+      /* return fast */
+      return pbuff;
+    }
+
+  /* q pointer now keeps the borderline between resolvable    */
+  /* and unresolvable part of the pathname                    */
 
   /* keep unresolvable part of the path in intbuf */
   if(q && *q != '\0')
@@ -222,17 +257,7 @@ char *canonize_path(const char *path, char use_env, char expand_tilde)
     }
 
   /* add or remove trailing slash as memorized before */
-  s = strlen(pbuff);
-  if (s > 0)
-    {
-      if(trailslash && (*(pbuff+s-1) != '/') && s < sizeof(pbuff)-2)
-        {
-	  *(pbuff+s) = '/';
-	  *(pbuff+s+1) = '\0';
-	}
-      if(!trailslash && (*(pbuff+s-1) == '/'))
-        *(pbuff+s-1) = '\0';
-    }
+  fix_trailslash(pbuff, trailslash);
 
   /* go back to the directory we were and return pointer to buffer */
   chdir(prev);

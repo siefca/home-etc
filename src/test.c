@@ -13,7 +13,8 @@ int main (int argc, char *argv[])
 		      "/home/users/siefca/.muttrc", "/home/users/siefca/.muttrc/xxx",
 		      "/home/users/siefca/.a", "/home/../home/users/siefca/hmm",
 		      "/home/../home/users/siefca/hmm/", "/home/users/siefca/.muttrc/",
-		      "tmp/.muttrc", "tmp/.muttrc/", "~/.muttrc", "~/muttrc/", "//.muttrc", "~noexpand", "~", "~/", "/////"
+		      "tmp/.muttrc", "tmp/.muttrc/", "~/.muttrc", "~/muttrc/", "//.muttrc", "~noexpand",
+		      "~", "~/", "/////", "/x"
   };
 
   home_etc_expand_tilde(1);
