@@ -1,0 +1,17 @@
+*~
+test
+a.out
+*.o
+*.so
+.deps
+.libs
+Makefile
+Makefile.in
+*.lo
+*.la
+example
+example2
+example3
+test
+TAGS
+tags
